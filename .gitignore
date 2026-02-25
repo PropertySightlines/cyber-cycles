@@ -70,3 +70,6 @@ spacetime.local.json
 # Lock files (optional - uncomment if you don't want to commit locks)
 # package-lock.json
 # Cargo.lock
+
+# Reference projects (not part of our codebase)
+armagetron-reference/
