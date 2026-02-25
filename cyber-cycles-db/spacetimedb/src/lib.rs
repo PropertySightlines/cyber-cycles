@@ -1,5 +1,11 @@
 use spacetimedb::{table, reducer, Identity, ReducerContext, Table, SpacetimeType};
 
+// Physics module for server-side validation
+pub mod physics;
+
+use physics::PhysicsConfig;
+use physics::collision;
+
 #[table(accessor = global_config, public)]
 pub struct GlobalConfig {
     #[primary_key]
@@ -137,15 +143,41 @@ pub fn on_disconnect(ctx: &ReducerContext) {
 }
 
 #[reducer]
-pub fn sync_state(ctx: &ReducerContext, id: String, x: f32, z: f32, dir_x: f32, dir_z: f32, 
-                  speed: f32, is_braking: bool, alive: bool, 
+pub fn sync_state(ctx: &ReducerContext, id: String, x: f32, z: f32, dir_x: f32, dir_z: f32,
+                  speed: f32, is_braking: bool, alive: bool,
                   is_turning_left: bool, is_turning_right: bool,
                   turn_points_json: String) {
     if let Some(mut p) = ctx.db.player().id().find(id) {
         if p.owner_id == ctx.sender() || p.is_ai {
-            p.x = x; p.z = z; 
+            // Server-side physics validation
+            let physics_config = PhysicsConfig::default();
+            
+            // Validate arena bounds
+            let arena_size = 200.0; // Default arena half-size
+            if let Err(_) = collision::check_arena_bounds(x, z, arena_size) {
+                // Out of bounds - mark player as dead
+                p.alive = false;
+                p.speed = 0.0;
+            } else {
+                // Validate speed against physics config
+                let expected_max_speed = if is_braking {
+                    physics_config.brake_speed
+                } else {
+                    physics_config.max_speed
+                };
+                
+                // Allow small tolerance for network latency
+                if speed > expected_max_speed * 1.1 {
+                    // Speed hack detected - clamp to max
+                    p.speed = expected_max_speed;
+                } else {
+                    p.speed = speed;
+                }
+            }
+            
+            // Update position and state
+            p.x = x; p.z = z;
             p.dir_x = dir_x; p.dir_z = dir_z;
-            p.speed = speed; 
             p.is_braking = is_braking;
             p.is_turning_left = is_turning_left;
             p.is_turning_right = is_turning_right;

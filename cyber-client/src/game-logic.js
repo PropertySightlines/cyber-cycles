@@ -3,7 +3,181 @@
  *
  * This module contains pure game logic functions that can be unit tested.
  * These functions have no dependencies on Three.js, SpacetimeDB, or DOM APIs.
+ *
+ * @deprecated The collision detection functions in this module are deprecated.
+ * Please use the new CollisionDetection module instead:
+ * @see {@link ./physics/CollisionDetection.js}
  */
+
+// Import configuration from Config module
+import {
+    PHYSICS_CONFIG,
+    GAME_CONFIG,
+    COLLISION_CONFIG,
+    VISUAL_CONFIG,
+    AUDIO_CONFIG,
+    PRESETS,
+    validatePhysicsConfig,
+    validateGameConfig,
+    validateCollisionConfig,
+    validateConfig,
+    exportConfig,
+    importConfig,
+    mergeConfig,
+    getDefaultConfig,
+    getPreset,
+    listPresets,
+    resetConfig,
+    createConfigBuilder
+} from './core/Config.js';
+
+// Import collision detection functions for internal use and re-export
+import {
+    EPS,
+    distanceToSegment,
+    distanceToSegmentWithClosest,
+    lineSegmentIntersection,
+    continuousCollisionCheck,
+    checkTrailCollision,
+    checkBikeCollision,
+    checkArenaBounds,
+    isOutOfBounds,
+    distanceToSegmentSquared,
+    isPointNearSegment,
+    segmentLength,
+    pointOnSegment
+} from './physics/CollisionDetection.js';
+
+// Re-export collision detection functions
+export {
+    EPS,
+    distanceToSegment,
+    distanceToSegmentWithClosest,
+    lineSegmentIntersection,
+    continuousCollisionCheck,
+    checkTrailCollision,
+    checkBikeCollision,
+    checkArenaBounds,
+    isOutOfBounds,
+    distanceToSegmentSquared,
+    isPointNearSegment,
+    segmentLength,
+    pointOnSegment
+} from './physics/CollisionDetection.js';
+
+// Import Rubber System for precision wall grinding
+export {
+    RUBBER_CONFIG,
+    RubberState,
+    updateRubber,
+    applyMalus,
+    calculateEffectiveness,
+    consumeRubber,
+    regenerateRubber,
+    detectWallProximity,
+    calculateWallDistance,
+    isNearWall,
+    calculateSpeedAdjustment,
+    applyRubberCollision,
+    validateRubberUsage,
+    createRubberReport,
+    calculateRubberNeeded,
+    getGrindingQuality
+} from './physics/RubberSystem.js';
+
+// ============================================================================
+// Re-exports from Config.js for Backward Compatibility
+// ============================================================================
+
+/**
+ * @deprecated Use PHYSICS_CONFIG from ./core/Config.js instead
+ */
+export { PHYSICS_CONFIG };
+
+/**
+ * @deprecated Use GAME_CONFIG from ./core/Config.js instead
+ */
+export { GAME_CONFIG };
+
+/**
+ * @deprecated Use COLLISION_CONFIG from ./core/Config.js instead
+ */
+export { COLLISION_CONFIG };
+
+/**
+ * @deprecated Use VISUAL_CONFIG from ./core/Config.js instead
+ */
+export { VISUAL_CONFIG };
+
+/**
+ * @deprecated Use AUDIO_CONFIG from ./core/Config.js instead
+ */
+export { AUDIO_CONFIG };
+
+/**
+ * @deprecated Use PRESETS from ./core/Config.js instead
+ */
+export { PRESETS };
+
+/**
+ * @deprecated Use validatePhysicsConfig from ./core/Config.js instead
+ */
+export { validatePhysicsConfig };
+
+/**
+ * @deprecated Use validateGameConfig from ./core/Config.js instead
+ */
+export { validateGameConfig };
+
+/**
+ * @deprecated Use validateCollisionConfig from ./core/Config.js instead
+ */
+export { validateCollisionConfig };
+
+/**
+ * @deprecated Use validateConfig from ./core/Config.js instead
+ */
+export { validateConfig };
+
+/**
+ * @deprecated Use exportConfig from ./core/Config.js instead
+ */
+export { exportConfig };
+
+/**
+ * @deprecated Use importConfig from ./core/Config.js instead
+ */
+export { importConfig };
+
+/**
+ * @deprecated Use mergeConfig from ./core/Config.js instead
+ */
+export { mergeConfig };
+
+/**
+ * @deprecated Use getDefaultConfig from ./core/Config.js instead
+ */
+export { getDefaultConfig };
+
+/**
+ * @deprecated Use getPreset from ./core/Config.js instead
+ */
+export { getPreset };
+
+/**
+ * @deprecated Use listPresets from ./core/Config.js instead
+ */
+export { listPresets };
+
+/**
+ * @deprecated Use resetConfig from ./core/Config.js instead
+ */
+export { resetConfig };
+
+/**
+ * @deprecated Use createConfigBuilder from ./core/Config.js instead
+ */
+export { createConfigBuilder };
 
 // ============================================================================
 // Constants
@@ -34,26 +208,6 @@ export const ADMIN_IDENTITY = "c2007484dedccf3d247b44dc4ebafeee388121889dffea0ce
 // ============================================================================
 // Vector Math Functions
 // ============================================================================
-
-/**
- * Calculate the distance from a point (px, pz) to a line segment (x1, z1) -> (x2, z2)
- * @param {number} px - Point X coordinate
- * @param {number} pz - Point Z coordinate
- * @param {number} x1 - Segment start X
- * @param {number} z1 - Segment start Z
- * @param {number} x2 - Segment end X
- * @param {number} z2 - Segment end Z
- * @param {object} outClosest - Optional output object for closest point
- * @returns {number} Distance from point to segment
- */
-export function distanceToSegment(px, pz, x1, z1, x2, z2, outClosest = {}) {
-    const l2 = (x2 - x1) ** 2 + (z2 - z1) ** 2;
-    if (l2 === 0) return Math.hypot(px - x1, pz - z1);
-    let t = Math.max(0, Math.min(1, ((px - x1) * (x2 - x1) + (pz - z1) * (z2 - z1)) / l2));
-    outClosest.x = x1 + t * (x2 - x1);
-    outClosest.z = z1 + t * (z2 - z1);
-    return Math.hypot(px - outClosest.x, pz - outClosest.z);
-}
 
 /**
  * Normalize a 2D vector to unit length
@@ -136,39 +290,8 @@ export function isInsideArena(x, z, arenaSize = 200) {
     return Math.abs(x) <= arenaSize && Math.abs(z) <= arenaSize;
 }
 
-/**
- * Check if player is out of arena bounds
- * @param {object} player - Player state
- * @param {number} arenaSize - Arena boundary
- * @returns {boolean} True if out of bounds
- */
-export function isOutOfBounds(player, arenaSize = CONSTANTS.ARENA_SIZE / 2) {
-    if (!player) return false;
-    return Math.abs(player.x) > arenaSize || Math.abs(player.z) > arenaSize;
-}
-
-/**
- * Check if player should be eliminated (hit trail)
- * @param {object} player - Player state
- * @param {Array} segments - All trail segments
- * @param {number} deathRadius - Death detection radius
- * @returns {object|null} Collision info or null
- */
-export function checkTrailCollision(player, segments, deathRadius = CONSTANTS.DEATH_RADIUS) {
-    if (!player || !player.alive) return null;
-
-    for (const seg of segments) {
-        if (seg.pid === player.id) continue;
-
-        // Simplified collision check
-        const dist = Math.hypot(player.x - seg.x1, player.z - seg.z1);
-        if (dist < deathRadius) {
-            return { collided: true, segment: seg, distance: dist };
-        }
-    }
-
-    return null;
-}
+// Note: isOutOfBounds and checkTrailCollision are now exported from
+// ./physics/CollisionDetection.js with improved implementations
 
 // ============================================================================
 // Player State Functions
@@ -347,6 +470,188 @@ export function generateSpawnPosition(arenaSize = 200, minSpawnRadius = 50) {
     return {
         x: Math.cos(angle) * radius,
         z: Math.sin(angle) * radius
+    };
+}
+
+// ============================================================================
+// Rubber-Based Collision Functions
+// ============================================================================
+
+/**
+ * Apply rubber-based collision detection and response
+ *
+ * Integrates the RubberSystem for precision wall grinding.
+ * This function combines traditional collision detection with rubber mechanics
+ * to provide smooth wall grinding while preventing chain grinding.
+ *
+ * @param {Object} player - Player state with position and direction
+ * @param {number} player.x - Player X coordinate
+ * @param {number} player.z - Player Z coordinate
+ * @param {number} player.speed - Current player speed
+ * @param {number} player.dir_x - Direction X component
+ * @param {number} player.dir_z - Direction Z component
+ * @param {string} player.id - Player identifier
+ * @param {RubberState} rubberState - Player's rubber state
+ * @param {Array<{x1: number, z1: number, x2: number, z2: number, pid?: string}>} segments - All trail segments
+ * @param {Object} [rubberConfig] - Optional rubber configuration override
+ * @returns {Object} Collision result with rubber-based adjustments
+ * @returns {boolean} return.collided - True if collision occurred
+ * @returns {boolean} return.isGrinding - True if player is wall grinding
+ * @returns {number} return.newSpeed - Adjusted speed after collision response
+ * @returns {number|null} return.newX - Corrected X position (if collision)
+ * @returns {number|null} return.newZ - Corrected Z position (if collision)
+ * @returns {number} return.rubberConsumed - Amount of rubber used
+ * @returns {number} return.wallDistance - Distance to nearest wall
+ *
+ * @example
+ * const result = applyRubberBasedCollision(player, rubberState, allSegments);
+ * if (result.collided) {
+ *   player.x = result.newX;
+ *   player.z = result.newZ;
+ * }
+ * player.speed = result.newSpeed;
+ */
+export function applyRubberBasedCollision(player, rubberState, segments, rubberConfig = null) {
+    const config = rubberConfig || RUBBER_CONFIG;
+
+    const result = {
+        collided: false,
+        isGrinding: false,
+        newSpeed: player.speed,
+        newX: null,
+        newZ: null,
+        rubberConsumed: 0,
+        wallDistance: Infinity
+    };
+
+    if (!player || !rubberState || !segments || segments.length === 0) {
+        return result;
+    }
+
+    // Calculate wall distance
+    result.wallDistance = calculateWallDistance(player, segments);
+
+    // Check if player is near wall for grinding
+    const isNear = isNearWall(player, segments, config.detectionRadius);
+
+    if (isNear) {
+        result.isGrinding = true;
+
+        // Apply rubber-based collision response
+        const collisionResponse = applyRubberCollision(player, segments, rubberState, config);
+
+        result.collided = collisionResponse.collided;
+        result.newSpeed = collisionResponse.newSpeed;
+        result.newX = collisionResponse.newX;
+        result.newZ = collisionResponse.newZ;
+        result.rubberConsumed = collisionResponse.rubberConsumed;
+
+        // Apply malus if player turned while grinding
+        if (player.is_turning_left || player.is_turning_right) {
+            applyMalus(rubberState, config.malusDuration, config.malusFactor);
+        }
+    }
+
+    // Update rubber state
+    updateRubber(rubberState, 0.016, config, isNear);
+
+    return result;
+}
+
+/**
+ * Check for rubber-based trail collision with death handling
+ *
+ * Extends traditional trail collision with rubber mechanics.
+ * Players with sufficient rubber can survive close calls.
+ *
+ * @param {Object} player - Player state
+ * @param {RubberState} rubberState - Player's rubber state
+ * @param {Array<{x1: number, z1: number, x2: number, z2: number, pid: string}>} segments - Trail segments
+ * @param {number} deathRadius - Death detection radius (default: 2.0)
+ * @returns {Object} Collision result
+ * @returns {boolean} return.collided - True if fatal collision
+ * @returns {boolean} return.survived - True if rubber prevented death
+ * @returns {number} return.distance - Distance to closest trail
+ * @returns {Object|null} return.segment - Hit segment info
+ *
+ * @example
+ * const result = checkRubberTrailCollision(player, rubberState, segments);
+ * if (result.collided && !result.survived) {
+ *   player.alive = false;
+ * }
+ */
+export function checkRubberTrailCollision(player, rubberState, segments, deathRadius = 2.0) {
+    const result = {
+        collided: false,
+        survived: false,
+        distance: Infinity,
+        segment: null
+    };
+
+    if (!player || !player.alive || !segments || segments.length === 0) {
+        return result;
+    }
+
+    // Check traditional trail collision
+    const traditionalCollision = checkTrailCollision(player, segments, deathRadius);
+
+    if (!traditionalCollision) {
+        return result;
+    }
+
+    result.collided = true;
+    result.distance = traditionalCollision.distance;
+    result.segment = traditionalCollision.segment;
+
+    // Check if rubber can prevent death
+    const effectiveness = calculateEffectiveness(rubberState);
+    const requiredRubber = (deathRadius - traditionalCollision.distance) * 2;
+
+    if (effectiveness > 0.5 && consumeRubber(rubberState, requiredRubber)) {
+        // Rubber saved the player - survive with penalty
+        result.survived = true;
+        result.rubberConsumed = requiredRubber;
+
+        // Apply heavy malus for surviving
+        applyMalus(rubberState, RUBBER_CONFIG.malusDuration * 2, RUBBER_CONFIG.malusFactor);
+    }
+
+    return result;
+}
+
+/**
+ * Update player rubber state for game loop
+ *
+ * Central function for updating all rubber-related state
+ * during the game loop. Should be called each frame.
+ *
+ * @param {Object} player - Player state
+ * @param {RubberState} rubberState - Player's rubber state
+ * @param {Array<{x1: number, z1: number, x2: number, z2: number}>} segments - Trail segments
+ * @param {number} dt - Delta time in seconds
+ * @param {Object} [config] - Optional configuration override
+ * @returns {Object} Update result
+ * @returns {boolean} return.isNearWall - Whether player is near wall
+ * @returns {number} return.rubberRemaining - Current rubber level
+ * @returns {number} return.effectiveness - Current effectiveness
+ */
+export function updatePlayerRubber(player, rubberState, segments, dt, config = null) {
+    const cfg = config || RUBBER_CONFIG;
+
+    const isNear = isNearWall(player, segments, cfg.detectionRadius);
+
+    // Update rubber with decay
+    updateRubber(rubberState, dt, cfg, isNear);
+
+    // Regenerate if not near wall and no malus
+    if (!isNear && rubberState.malusTimer <= 0) {
+        regenerateRubber(rubberState, dt, cfg.regenRate, false);
+    }
+
+    return {
+        isNearWall: isNear,
+        rubberRemaining: rubberState.rubber,
+        effectiveness: calculateEffectiveness(rubberState)
     };
 }
 
