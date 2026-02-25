@@ -683,3 +683,35 @@ export function createInitialState() {
 export function createDefaultConfig() {
     return { ...DEFAULT_CONFIG };
 }
+
+// ============================================================================
+// PlayerEntity Re-exports
+// ============================================================================
+
+/**
+ * PlayerEntity - Component-based player entity
+ * @see {@link ./game/PlayerEntity.js}
+ */
+export {
+    PlayerEntity,
+    PlayerState,
+    PhysicsComponent,
+    RubberComponent,
+    RenderComponent,
+    NetworkComponent,
+    StateComponent
+} from './game/PlayerEntity.js';
+
+// ============================================================================
+// TrailEntity Re-exports
+// ============================================================================
+
+/**
+ * TrailEntity - Player trail/wall management entity
+ * @see {@link ./game/TrailEntity.js}
+ */
+export {
+    TrailEntity,
+    createTrailEntity,
+    TRAIL_DEFAULTS
+} from './game/TrailEntity.js';

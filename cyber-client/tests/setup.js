@@ -1,6 +1,6 @@
 /**
  * Test Setup File for Cyber Cycles
- * 
+ *
  * This file runs before each test suite and sets up the testing environment.
  */
 
@@ -13,7 +13,23 @@ global.THREE = {
   AmbientLight: class AmbientLight {},
   Points: class Points {},
   Mesh: class Mesh {},
-  BufferGeometry: class BufferGeometry {},
+  BufferGeometry: class BufferGeometry {
+    constructor() {
+      this.attributes = {};
+      this.index = null;
+    }
+    setAttribute(name, attribute) {
+      this.attributes[name] = attribute;
+      return this;
+    }
+    getAttribute(name) {
+      return this.attributes[name];
+    }
+    setIndex(index) {
+      this.index = index;
+      return this;
+    }
+  },
   Float32BufferAttribute: class Float32BufferAttribute {},
   PointsMaterial: class PointsMaterial {},
   MeshBasicMaterial: class MeshBasicMaterial {},
@@ -22,7 +38,12 @@ global.THREE = {
   BoxGeometry: class BoxGeometry {},
   LineBasicMaterial: class LineBasicMaterial {},
   LineSegments: class LineSegments {},
-  BufferAttribute: class BufferAttribute {},
+  BufferAttribute: class BufferAttribute {
+    constructor(array, itemSize) {
+      this.array = array;
+      this.itemSize = itemSize;
+    }
+  },
   AdditiveBlending: 2,
   DoubleSide: 3,
   CanvasTexture: class CanvasTexture {}
