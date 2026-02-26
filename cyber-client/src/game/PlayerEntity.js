@@ -5,7 +5,7 @@
  * - Physics component (Verlet integration)
  * - Rubber component (wall grinding mechanics)
  * - Render component (visual representation)
- * - Network component (multiplayer sync)
+ * - Network component (multiplayer sync with input buffering)
  * - State component (game state machine)
  *
  * @module PlayerEntity
@@ -15,6 +15,7 @@ import { VerletPoint, integrate, applyVelocity, updatePosition } from '../physic
 import { RubberState, updateRubber, applyMalus, calculateEffectiveness, consumeRubber, regenerateRubber, isNearWall, calculateWallDistance } from '../physics/RubberSystem.js';
 import { PHYSICS_CONFIG, GAME_CONFIG, COLLISION_CONFIG } from '../core/Config.js';
 import { EventSystem } from '../core/EventSystem.js';
+import { InputBuffer } from '../network/InputBuffer.js';
 
 // ============================================================================
 // State Machine Constants
@@ -489,7 +490,8 @@ export class RenderComponent {
 /**
  * NetworkComponent - Handles multiplayer synchronization
  *
- * Manages ownership, AI status, and input buffering.
+ * Manages ownership, AI status, and input buffering with InputBuffer
+ * for client-side prediction and lag compensation.
  *
  * @class
  */
@@ -511,39 +513,29 @@ export class NetworkComponent {
         /** @type {number} Sync interval */
         this.syncInterval = options.syncInterval || 0.05; // 50ms
 
-        /** @type {Array} Input buffer for prediction */
-        this.inputBuffer = [];
-
-        /** @type {number} Buffer size limit */
-        this.maxBufferSize = options.maxBufferSize || 20;
-
-        /** @type {number} Sequence number */
-        this.sequenceNumber = 0;
+        /** @type {InputBuffer} Input buffer for prediction */
+        this.inputBuffer = new InputBuffer({
+            maxBufferSize: options.maxBufferSize || 60,
+            maxAge: options.maxAge || 200
+        });
 
         /** @type {number} Last acknowledged sequence */
         this.lastAckedSequence = 0;
+
+        /** @type {Object|null} Last server state for reconciliation */
+        this.lastServerState = null;
     }
 
     /**
-     * Add input to buffer
+     * Add input to buffer with sequence number
      * @param {Object} input - Input data
+     * @param {number} [timestamp] - Optional timestamp (defaults to Date.now())
      * @returns {number} Sequence number
      */
-    addInput(input) {
-        this.sequenceNumber++;
-        const bufferedInput = {
-            ...input,
-            sequence: this.sequenceNumber,
-            timestamp: Date.now()
-        };
-        this.inputBuffer.push(bufferedInput);
-
-        // Limit buffer size
-        if (this.inputBuffer.length > this.maxBufferSize) {
-            this.inputBuffer.shift();
-        }
-
-        return this.sequenceNumber;
+    addInput(input, timestamp) {
+        const ts = timestamp || Date.now();
+        const sequence = this.inputBuffer.addInput(ts, input);
+        return sequence;
     }
 
     /**
@@ -552,20 +544,79 @@ export class NetworkComponent {
      * @returns {Array}
      */
     getInputsSince(sinceSequence) {
-        return this.inputBuffer.filter(input => input.sequence > sinceSequence);
+        return this.inputBuffer.getInputsSince(sinceSequence);
+    }
+
+    /**
+     * Get specific input by sequence
+     * @param {number} sequenceNumber - Sequence number
+     * @returns {Object|null}
+     */
+    getInput(sequenceNumber) {
+        return this.inputBuffer.getInput(sequenceNumber);
+    }
+
+    /**
+     * Get all unacknowledged inputs
+     * @returns {Array}
+     */
+    getUnacknowledgedInputs() {
+        return this.inputBuffer.getUnacknowledgedInputs();
     }
 
     /**
      * Acknowledge sequence
      * @param {number} sequence - Sequence to acknowledge
+     * @returns {Array} Acknowledged inputs
      */
     acknowledgeSequence(sequence) {
+        const acknowledged = this.inputBuffer.acknowledgeSequence(sequence);
         this.lastAckedSequence = sequence;
+        return acknowledged;
+    }
 
-        // Remove acknowledged inputs
-        this.inputBuffer = this.inputBuffer.filter(
-            input => input.sequence > sequence
-        );
+    /**
+     * Reconcile with server state
+     * @param {number} serverSequence - Server's last processed sequence
+     * @param {Object} serverState - Server authoritative state
+     * @returns {Object} Reconciliation result
+     */
+    reconcile(serverSequence, serverState) {
+        this.lastServerState = serverState;
+        return this.inputBuffer.reconcile(serverSequence, serverState);
+    }
+
+    /**
+     * Get next sequence number
+     * @returns {number}
+     */
+    getNextSequenceNumber() {
+        return this.inputBuffer.getNextSequenceNumber();
+    }
+
+    /**
+     * Get current sequence number
+     * @returns {number}
+     */
+    getCurrentSequence() {
+        return this.inputBuffer.getCurrentSequence();
+    }
+
+    /**
+     * Get buffer size
+     * @returns {number}
+     */
+    getBufferSize() {
+        return this.inputBuffer.size();
+    }
+
+    /**
+     * Clear old inputs
+     * @param {number} currentTime - Current timestamp
+     * @returns {number} Number of inputs removed
+     */
+    clearOldInputs(currentTime) {
+        return this.inputBuffer.clearOldInputs(currentTime);
     }
 
     /**
@@ -586,6 +637,21 @@ export class NetworkComponent {
     }
 
     /**
+     * Clear all inputs
+     */
+    clearInputs() {
+        this.inputBuffer.clear();
+    }
+
+    /**
+     * Get buffer usage percentage
+     * @returns {number}
+     */
+    getBufferUsage() {
+        return this.inputBuffer.getBufferUsage();
+    }
+
+    /**
      * Serialize to JSON
      * @returns {Object}
      */
@@ -594,8 +660,9 @@ export class NetworkComponent {
             ownerId: this.ownerId,
             isAi: this.isAi,
             lastSync: this.lastSync,
-            sequenceNumber: this.sequenceNumber,
-            lastAckedSequence: this.lastAckedSequence
+            lastAckedSequence: this.lastAckedSequence,
+            currentSequence: this.getCurrentSequence(),
+            bufferSize: this.getBufferSize()
         };
     }
 
@@ -607,7 +674,6 @@ export class NetworkComponent {
         if (data.ownerId !== undefined) this.ownerId = data.ownerId;
         if (data.isAi !== undefined) this.isAi = data.isAi;
         if (data.lastSync !== undefined) this.lastSync = data.lastSync;
-        if (data.sequenceNumber !== undefined) this.sequenceNumber = data.sequenceNumber;
         if (data.lastAckedSequence !== undefined) this.lastAckedSequence = data.lastAckedSequence;
     }
 }
@@ -991,9 +1057,10 @@ export class PlayerEntity {
      * @param {boolean} input.right - Turn right
      * @param {boolean} input.brake - Brake
      * @param {boolean} input.boost - Boost (if available)
+     * @returns {number} Sequence number of the buffered input
      */
     applyInput(input) {
-        if (!this.state.alive) return;
+        if (!this.state.alive) return -1;
 
         const dt = PHYSICS_CONFIG.fixedTimeStep;
 
@@ -1016,13 +1083,15 @@ export class PlayerEntity {
             }
         }
 
-        // Add input to network buffer
-        this.network.addInput({
+        // Add input to network buffer with sequence number
+        const sequence = this.network.addInput({
             left: input.left || false,
             right: input.right || false,
             brake: input.brake || false,
-            timestamp: Date.now()
+            boost: input.boost || false
         });
+
+        return sequence;
     }
 
     /**
@@ -1171,6 +1240,9 @@ export class PlayerEntity {
 
         this.rubber.state.reset();
 
+        // Clear input buffer on respawn
+        this.network.clearInputs();
+
         // Transition to alive after delay
         setTimeout(() => {
             this.state.transition(PlayerState.ALIVE);
@@ -1182,6 +1254,138 @@ export class PlayerEntity {
                 dirZ
             });
         }, GAME_CONFIG.respawnDelay * 1000);
+    }
+
+    // =========================================================================
+    // Network Prediction and Reconciliation Methods
+    // =========================================================================
+
+    /**
+     * Reconcile with server state for client-side prediction
+     * @param {number} serverSequence - Server's last processed sequence number
+     * @param {Object} serverState - Server authoritative state
+     * @returns {Object} Reconciliation result with inputs to replay
+     */
+    reconcileWithServer(serverSequence, serverState) {
+        // Perform reconciliation
+        const result = this.network.reconcile(serverSequence, serverState);
+
+        // Apply server state if provided
+        if (serverState && serverState.position) {
+            // Store the server state for potential replay
+            this._lastServerState = {
+                ...serverState,
+                sequence: serverSequence
+            };
+        }
+
+        // Emit reconciliation event
+        this.events.emit('network:reconcile', {
+            playerId: this.id,
+            serverSequence,
+            acknowledgedCount: result.acknowledgedCount,
+            replayCount: result.replayCount
+        });
+
+        return result;
+    }
+
+    /**
+     * Replay inputs after reconciliation
+     * @param {Array} inputs - Inputs to replay
+     * @returns {Array} Results of replayed inputs
+     */
+    replayInputs(inputs) {
+        const results = [];
+
+        for (const input of inputs) {
+            // Apply input without re-buffering
+            this._applyInputWithoutBuffering(input);
+            results.push({
+                sequence: input.sequence,
+                applied: true
+            });
+        }
+
+        return results;
+    }
+
+    /**
+     * Apply input without buffering (for replay)
+     * @param {Object} input - Input data
+     * @private
+     */
+    _applyInputWithoutBuffering(input) {
+        if (!this.state.alive) return;
+
+        // Handle turning
+        if (input.left) {
+            this.startTurn(-1);
+        } else if (input.right) {
+            this.startTurn(1);
+        } else {
+            this.stopTurn();
+        }
+
+        // Handle braking
+        if (input.brake) {
+            this.applyBrake(1);
+        } else {
+            this.physics.isBraking = false;
+            if (!this.physics.isBoosting) {
+                this.physics.setSpeed(PHYSICS_CONFIG.baseSpeed);
+            }
+        }
+    }
+
+    /**
+     * Get unacknowledged inputs for sending to server
+     * @returns {Array} Array of unacknowledged inputs
+     */
+    getUnacknowledgedInputs() {
+        return this.network.getUnacknowledgedInputs();
+    }
+
+    /**
+     * Acknowledge inputs up to sequence
+     * @param {number} sequence - Sequence number to acknowledge
+     * @returns {Array} Acknowledged inputs
+     */
+    acknowledgeInputs(sequence) {
+        return this.network.acknowledgeSequence(sequence);
+    }
+
+    /**
+     * Get current input sequence number
+     * @returns {number}
+     */
+    getCurrentSequence() {
+        return this.network.getCurrentSequence();
+    }
+
+    /**
+     * Get last acknowledged sequence
+     * @returns {number}
+     */
+    getLastAcknowledgedSequence() {
+        return this.network.lastAckedSequence;
+    }
+
+    /**
+     * Get buffer usage percentage
+     * @returns {number}
+     */
+    getInputBufferUsage() {
+        return this.network.getBufferUsage();
+    }
+
+    /**
+     * Clear old inputs from buffer
+     * @param {number} currentTime - Current timestamp
+     * @returns {number} Number of inputs removed
+     */
+    clearOldInputs(currentTime) {
+        return this.network.clearOldInputs(currentTime);
     }
 
     /**

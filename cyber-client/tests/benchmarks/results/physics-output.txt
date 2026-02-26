@@ -1,0 +1,2721 @@
+
+--- SpatialHash Insert Benchmarks ---
+
+
+[Benchmark] SpatialHash: Insert 100 entities
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.318ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.033ms
+    Max: 0.479ms
+    Avg: 0.045ms
+    Median: 0.036ms
+    P95: 0.076ms
+    P99: 0.193ms
+    StdDev: 0.035ms
+
+[Benchmark] SpatialHash: Insert 1000 entities
+  Iterations: 100, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.669ms
+  Running benchmark (100 iterations)...
+  Complete!
+    Min: 0.281ms
+    Max: 2.111ms
+    Avg: 0.507ms
+    Median: 0.404ms
+    P95: 1.006ms
+    P99: 1.540ms
+    StdDev: 0.284ms
+
+[Benchmark] SpatialHash: Insert 10000 entities
+  Iterations: 20, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 9.005ms
+  Running benchmark (20 iterations)...
+  Complete!
+    Min: 4.716ms
+    Max: 17.914ms
+    Avg: 7.379ms
+    Median: 5.832ms
+    P95: 13.869ms
+    P99: 17.105ms
+    StdDev: 3.281ms
+
+--- SpatialHash Query Benchmarks ---
+
+
+[Benchmark] SpatialHash: Query 100 entities (radius=10)
+  Iterations: 1000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.157ms
+  Running benchmark (1000 iterations)...
+  Complete!
+    Min: 0.036ms
+    Max: 3.562ms
+    Avg: 0.059ms
+    Median: 0.041ms
+    P95: 0.069ms
+    P99: 0.147ms
+    StdDev: 0.173ms
+
+[Benchmark] SpatialHash: Query 1000 entities (radius=10)
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.736ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.277ms
+    Max: 1.464ms
+    Avg: 0.396ms
+    Median: 0.376ms
+    P95: 0.501ms
+    P99: 1.308ms
+    StdDev: 0.171ms
+
+[Benchmark] SpatialHash: Query 10000 entities (radius=10)
+  Iterations: 100, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 8.119ms
+  Running benchmark (100 iterations)...
+  Complete!
+    Min: 4.600ms
+    Max: 24.346ms
+    Avg: 8.156ms
+    Median: 7.356ms
+    P95: 13.024ms
+    P99: 18.564ms
+    StdDev: 3.202ms
+
+[Benchmark] SpatialHash: Query IDs 1000 entities
+  Iterations: 1000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.703ms
+  Running benchmark (1000 iterations)...
+  Complete!
+    Min: 0.269ms
+    Max: 1.732ms
+    Avg: 0.396ms
+    Median: 0.371ms
+    P95: 0.676ms
+    P99: 1.155ms
+    StdDev: 0.168ms
+
+--- SpatialHash Update Benchmarks ---
+
+
+[Benchmark] SpatialHash: Update 100 entities
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.085ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.041ms
+    Max: 0.903ms
+    Avg: 0.062ms
+    Median: 0.052ms
+    P95: 0.084ms
+    P99: 0.138ms
+    StdDev: 0.051ms
+
+[Benchmark] SpatialHash: Update 1000 entities
+  Iterations: 100, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.621ms
+  Running benchmark (100 iterations)...
+  Complete!
+    Min: 0.337ms
+    Max: 1.592ms
+    Avg: 0.561ms
+    Median: 0.555ms
+    P95: 0.735ms
+    P99: 1.301ms
+    StdDev: 0.186ms
+
+[Benchmark] SpatialHash: Remove 100 entities
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.100ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.037ms
+    Max: 0.701ms
+    Avg: 0.050ms
+    Median: 0.040ms
+    P95: 0.088ms
+    P99: 0.119ms
+    StdDev: 0.043ms
+
+--- CollisionDetection: Distance to Segment Benchmarks ---
+
+
+[Benchmark] CollisionDetection: distanceToSegment (basic)
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.002ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 13.260ms
+    Avg: 0.002ms
+    Median: 0.001ms
+    P95: 0.001ms
+    P99: 0.002ms
+    StdDev: 0.133ms
+
+[Benchmark] CollisionDetection: distanceToSegmentWithClosest
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.006ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 0.068ms
+    Avg: 0.001ms
+    Median: 0.001ms
+    P95: 0.001ms
+    P99: 0.002ms
+    StdDev: 0.001ms
+
+[Benchmark] CollisionDetection: distanceToSegmentSquared
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.004ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 0.695ms
+    Avg: 0.001ms
+    Median: 0.001ms
+    P95: 0.001ms
+    P99: 0.002ms
+    StdDev: 0.008ms
+
+[Benchmark] CollisionDetection: distanceToSegment (100 segments)
+  Iterations: 1000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.083ms
+  Running benchmark (1000 iterations)...
+  Complete!
+    Min: 0.010ms
+    Max: 2.396ms
+    Avg: 0.028ms
+    Median: 0.012ms
+    P95: 0.056ms
+    P99: 0.093ms
+    StdDev: 0.083ms
+
+[Benchmark] CollisionDetection: distanceToSegment (1000 segments)
+  Iterations: 200, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.229ms
+  Running benchmark (200 iterations)...
+  Complete!
+    Min: 0.096ms
+    Max: 1.049ms
+    Avg: 0.141ms
+    Median: 0.107ms
+    P95: 0.241ms
+    P99: 0.901ms
+    StdDev: 0.123ms
+
+--- CollisionDetection: Line Intersection Benchmarks ---
+
+
+[Benchmark] CollisionDetection: lineSegmentIntersection (basic)
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.007ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 3.837ms
+    Avg: 0.001ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.002ms
+    StdDev: 0.045ms
+
+[Benchmark] CollisionDetection: lineSegmentIntersection (parallel)
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.002ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 1.398ms
+    Avg: 0.000ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.014ms
+
+[Benchmark] CollisionDetection: intersection vs 100 segments
+  Iterations: 1000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.108ms
+  Running benchmark (1000 iterations)...
+  Complete!
+    Min: 0.012ms
+    Max: 4.057ms
+    Avg: 0.026ms
+    Median: 0.015ms
+    P95: 0.026ms
+    P99: 0.076ms
+    StdDev: 0.143ms
+
+--- CollisionDetection: Continuous Collision Benchmarks ---
+
+
+[Benchmark] CollisionDetection: continuousCollisionCheck (10 segments)
+  Iterations: 2000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.012ms
+  Running benchmark (2000 iterations)...
+  Complete!
+    Min: 0.001ms
+    Max: 1.036ms
+    Avg: 0.008ms
+    Median: 0.005ms
+    P95: 0.010ms
+    P99: 0.029ms
+    StdDev: 0.035ms
+
+[Benchmark] CollisionDetection: continuousCollisionCheck (100 segments)
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.023ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.011ms
+    Max: 2.893ms
+    Avg: 0.028ms
+    Median: 0.019ms
+    P95: 0.036ms
+    P99: 0.170ms
+    StdDev: 0.130ms
+
+[Benchmark] CollisionDetection: checkTrailCollision
+  Iterations: 1000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.120ms
+  Running benchmark (1000 iterations)...
+  Complete!
+    Min: 0.007ms
+    Max: 0.618ms
+    Avg: 0.012ms
+    Median: 0.010ms
+    P95: 0.016ms
+    P99: 0.029ms
+    StdDev: 0.027ms
+
+[Benchmark] CollisionDetection: checkBikeCollision (10 players)
+  Iterations: 2000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.015ms
+  Running benchmark (2000 iterations)...
+  Complete!
+    Min: 0.001ms
+    Max: 5.599ms
+    Avg: 0.005ms
+    Median: 0.001ms
+    P95: 0.009ms
+    P99: 0.016ms
+    StdDev: 0.125ms
+
+[Benchmark] CollisionDetection: checkBikeCollision (50 players)
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.018ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.005ms
+    Max: 0.110ms
+    Avg: 0.011ms
+    Median: 0.010ms
+    P95: 0.015ms
+    P99: 0.029ms
+    StdDev: 0.007ms
+
+--- CollisionDetection: Arena Bounds Benchmarks ---
+
+
+[Benchmark] CollisionDetection: checkArenaBounds (inside)
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.002ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 0.851ms
+    Avg: 0.000ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.009ms
+
+[Benchmark] CollisionDetection: checkArenaBounds (outside)
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.008ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 2.532ms
+    Avg: 0.001ms
+    Median: 0.000ms
+    P95: 0.002ms
+    P99: 0.002ms
+    StdDev: 0.035ms
+
+[Benchmark] CollisionDetection: isPointNearSegment
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.005ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 1.954ms
+    Avg: 0.001ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.020ms
+
+--- RubberSystem Benchmarks ---
+
+
+[Benchmark] RubberSystem: Create RubberState
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.002ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 0.167ms
+    Avg: 0.000ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.003ms
+
+[Benchmark] RubberSystem: updateRubber
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.006ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 3.419ms
+    Avg: 0.001ms
+    Median: 0.001ms
+    P95: 0.001ms
+    P99: 0.002ms
+    StdDev: 0.042ms
+
+[Benchmark] RubberSystem: applyMalus
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.004ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 2.612ms
+    Avg: 0.001ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.032ms
+
+[Benchmark] RubberSystem: calculateEffectiveness
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.003ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 0.050ms
+    Avg: 0.000ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.001ms
+
+[Benchmark] RubberSystem: consumeRubber
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.002ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 0.839ms
+    Avg: 0.000ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.008ms
+
+[Benchmark] RubberSystem: regenerateRubber
+  Iterations: 10000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.003ms
+  Running benchmark (10000 iterations)...
+  Complete!
+    Min: 0.000ms
+    Max: 0.075ms
+    Avg: 0.000ms
+    Median: 0.000ms
+    P95: 0.001ms
+    P99: 0.001ms
+    StdDev: 0.002ms
+
+--- RubberSystem: Wall Proximity Benchmarks ---
+
+
+[Benchmark] RubberSystem: detectWallProximity (10 segments)
+  Iterations: 2000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.007ms
+  Running benchmark (2000 iterations)...
+  Complete!
+    Min: 0.001ms
+    Max: 0.825ms
+    Avg: 0.004ms
+    Median: 0.001ms
+    P95: 0.007ms
+    P99: 0.012ms
+    StdDev: 0.020ms
+
+[Benchmark] RubberSystem: detectWallProximity (100 segments)
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.010ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.007ms
+    Max: 0.539ms
+    Avg: 0.009ms
+    Median: 0.008ms
+    P95: 0.010ms
+    P99: 0.032ms
+    StdDev: 0.024ms
+
+[Benchmark] RubberSystem: calculateWallDistance (100 segments)
+  Iterations: 1000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.061ms
+  Running benchmark (1000 iterations)...
+  Complete!
+    Min: 0.010ms
+    Max: 0.856ms
+    Avg: 0.014ms
+    Median: 0.012ms
+    P95: 0.017ms
+    P99: 0.025ms
+    StdDev: 0.036ms
+
+[Benchmark] RubberSystem: isNearWall (100 segments)
+  Iterations: 2000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.064ms
+  Running benchmark (2000 iterations)...
+  Complete!
+    Min: 0.005ms
+    Max: 0.760ms
+    Avg: 0.009ms
+    Median: 0.007ms
+    P95: 0.012ms
+    P99: 0.017ms
+    StdDev: 0.024ms
+
+[Benchmark] RubberSystem: calculateSpeedAdjustment
+  Iterations: 1000, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.053ms
+  Running benchmark (1000 iterations)...
+  Complete!
+    Min: 0.004ms
+    Max: 6.916ms
+    Avg: 0.018ms
+    Median: 0.007ms
+    P95: 0.011ms
+    P99: 0.035ms
+    StdDev: 0.253ms
+
+[Benchmark] RubberSystem: applyRubberCollision
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.096ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.004ms
+    Max: 0.956ms
+    Avg: 0.012ms
+    Median: 0.006ms
+    P95: 0.033ms
+    P99: 0.043ms
+    StdDev: 0.049ms
+
+--- EntityManager Benchmarks ---
+
+
+[Benchmark] EntityManager: Create 100 entities
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.461ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.095ms
+    Max: 1.251ms
+    Avg: 0.123ms
+    Median: 0.106ms
+    P95: 0.142ms
+    P99: 0.821ms
+    StdDev: 0.095ms
+
+[Benchmark] EntityManager: Create 1000 entities
+  Iterations: 100, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 1.198ms
+  Running benchmark (100 iterations)...
+  Complete!
+    Min: 0.704ms
+    Max: 4.113ms
+    Avg: 1.252ms
+    Median: 1.106ms
+    P95: 2.424ms
+    P99: 3.509ms
+    StdDev: 0.558ms
+
+[Benchmark] EntityManager: Create 10000 entities
+  Iterations: 20, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 31.020ms
+  Running benchmark (20 iterations)...
+  Complete!
+    Min: 17.105ms
+    Max: 49.796ms
+    Avg: 30.380ms
+    Median: 28.410ms
+    P95: 48.812ms
+    P99: 49.599ms
+    StdDev: 8.537ms
+
+[Benchmark] EntityManager: Update 100 entities
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.919ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.119ms
+    Max: 1.447ms
+    Avg: 0.176ms
+    Median: 0.142ms
+    P95: 0.292ms
+    P99: 1.020ms
+    StdDev: 0.140ms
+
+[Benchmark] EntityManager: Query by type (1000 entities)
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 1.160ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.609ms
+    Max: 3.500ms
+    Avg: 1.045ms
+    Median: 0.990ms
+    P95: 2.092ms
+    P99: 2.762ms
+    StdDev: 0.447ms
+
+[Benchmark] EntityManager: Query by component (1000 entities)
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 2.261ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 1.113ms
+    Max: 5.404ms
+    Avg: 1.858ms
+    Median: 1.838ms
+    P95: 2.980ms
+    P99: 4.092ms
+    StdDev: 0.649ms
+
+[Benchmark] EntityManager: Query AND (position + velocity)
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 2.260ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 1.209ms
+    Max: 9.033ms
+    Avg: 2.096ms
+    Median: 2.049ms
+    P95: 3.280ms
+    P99: 4.811ms
+    StdDev: 0.822ms
+
+[Benchmark] EntityManager: Destroy 100 entities
+  Iterations: 500, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 0.520ms
+  Running benchmark (500 iterations)...
+  Complete!
+    Min: 0.111ms
+    Max: 1.898ms
+    Avg: 0.152ms
+    Median: 0.131ms
+    P95: 0.188ms
+    P99: 0.546ms
+    StdDev: 0.124ms
+
+[Benchmark] EntityManager: Clear 1000 entities
+  Iterations: 100, Warmup: 100
+  Running warmup (100 iterations)...
+  Warmup complete. Avg: 1.428ms
+  Running benchmark (100 iterations)...
+  Complete!
+    Min: 0.696ms
+    Max: 2.574ms
+    Avg: 1.189ms
+    Median: 1.097ms
+    P95: 2.207ms
+    P99: 2.470ms
+    StdDev: 0.379ms
+
+
+============================================================
+GENERATING REPORT
+============================================================
+
+# Cyber Cycles Physics Benchmarks - Benchmark Report
+
+**Generated:** 2026-02-25T13:05:37.974Z
+
+## Test Environment
+
+| Property | Value |
+|----------|-------|
+| Platform | Node.js |
+| Timestamp | 2026-02-25T13:05:25.835Z |
+
+## Summary
+
+| Benchmark | Iterations | Min (ms) | Max (ms) | Avg (ms) | Median (ms) | P95 (ms) | P99 (ms) |
+|-----------|------------|----------|----------|----------|-------------|----------|----------|
+| SpatialHash: Insert 100 entities | 500 | 0.033 | 0.479 | 0.045 | 0.036 | 0.076 | 0.193 |
+| SpatialHash: Insert 1000 entities | 100 | 0.281 | 2.111 | 0.507 | 0.404 | 1.006 | 1.540 |
+| SpatialHash: Insert 10000 entities | 20 | 4.716 | 17.914 | 7.379 | 5.832 | 13.869 | 17.105 |
+| SpatialHash: Query 100 entities (radius=10) | 1000 | 0.036 | 3.562 | 0.059 | 0.041 | 0.069 | 0.147 |
+| SpatialHash: Query 1000 entities (radius=10) | 500 | 0.277 | 1.464 | 0.396 | 0.376 | 0.501 | 1.308 |
+| SpatialHash: Query 10000 entities (radius=10) | 100 | 4.600 | 24.346 | 8.156 | 7.356 | 13.024 | 18.564 |
+| SpatialHash: Query IDs 1000 entities | 1000 | 0.269 | 1.732 | 0.396 | 0.371 | 0.676 | 1.155 |
+| SpatialHash: Update 100 entities | 500 | 0.041 | 0.903 | 0.062 | 0.052 | 0.084 | 0.138 |
+| SpatialHash: Update 1000 entities | 100 | 0.337 | 1.592 | 0.561 | 0.555 | 0.735 | 1.301 |
+| SpatialHash: Remove 100 entities | 500 | 0.037 | 0.701 | 0.050 | 0.040 | 0.088 | 0.119 |
+| CollisionDetection: distanceToSegment (basic) | 10000 | 0.000 | 13.260 | 0.002 | 0.001 | 0.001 | 0.002 |
+| CollisionDetection: distanceToSegmentWithClosest | 10000 | 0.000 | 0.068 | 0.001 | 0.001 | 0.001 | 0.002 |
+| CollisionDetection: distanceToSegmentSquared | 10000 | 0.000 | 0.695 | 0.001 | 0.001 | 0.001 | 0.002 |
+| CollisionDetection: distanceToSegment (100 segments) | 1000 | 0.010 | 2.396 | 0.028 | 0.012 | 0.056 | 0.093 |
+| CollisionDetection: distanceToSegment (1000 segments) | 200 | 0.096 | 1.049 | 0.141 | 0.107 | 0.241 | 0.901 |
+| CollisionDetection: lineSegmentIntersection (basic) | 10000 | 0.000 | 3.837 | 0.001 | 0.000 | 0.001 | 0.002 |
+| CollisionDetection: lineSegmentIntersection (parallel) | 10000 | 0.000 | 1.398 | 0.000 | 0.000 | 0.001 | 0.001 |
+| CollisionDetection: intersection vs 100 segments | 1000 | 0.012 | 4.057 | 0.026 | 0.015 | 0.026 | 0.076 |
+| CollisionDetection: continuousCollisionCheck (10 segments) | 2000 | 0.001 | 1.036 | 0.008 | 0.005 | 0.010 | 0.029 |
+| CollisionDetection: continuousCollisionCheck (100 segments) | 500 | 0.011 | 2.893 | 0.028 | 0.019 | 0.036 | 0.170 |
+| CollisionDetection: checkTrailCollision | 1000 | 0.007 | 0.618 | 0.012 | 0.010 | 0.016 | 0.029 |
+| CollisionDetection: checkBikeCollision (10 players) | 2000 | 0.001 | 5.599 | 0.005 | 0.001 | 0.009 | 0.016 |
+| CollisionDetection: checkBikeCollision (50 players) | 500 | 0.005 | 0.110 | 0.011 | 0.010 | 0.015 | 0.029 |
+| CollisionDetection: checkArenaBounds (inside) | 10000 | 0.000 | 0.851 | 0.000 | 0.000 | 0.001 | 0.001 |
+| CollisionDetection: checkArenaBounds (outside) | 10000 | 0.000 | 2.532 | 0.001 | 0.000 | 0.002 | 0.002 |
+| CollisionDetection: isPointNearSegment | 10000 | 0.000 | 1.954 | 0.001 | 0.000 | 0.001 | 0.001 |
+| RubberSystem: Create RubberState | 10000 | 0.000 | 0.167 | 0.000 | 0.000 | 0.001 | 0.001 |
+| RubberSystem: updateRubber | 10000 | 0.000 | 3.419 | 0.001 | 0.001 | 0.001 | 0.002 |
+| RubberSystem: applyMalus | 10000 | 0.000 | 2.612 | 0.001 | 0.000 | 0.001 | 0.001 |
+| RubberSystem: calculateEffectiveness | 10000 | 0.000 | 0.050 | 0.000 | 0.000 | 0.001 | 0.001 |
+| RubberSystem: consumeRubber | 10000 | 0.000 | 0.839 | 0.000 | 0.000 | 0.001 | 0.001 |
+| RubberSystem: regenerateRubber | 10000 | 0.000 | 0.075 | 0.000 | 0.000 | 0.001 | 0.001 |
+| RubberSystem: detectWallProximity (10 segments) | 2000 | 0.001 | 0.825 | 0.004 | 0.001 | 0.007 | 0.012 |
+| RubberSystem: detectWallProximity (100 segments) | 500 | 0.007 | 0.539 | 0.009 | 0.008 | 0.010 | 0.032 |
+| RubberSystem: calculateWallDistance (100 segments) | 1000 | 0.010 | 0.856 | 0.014 | 0.012 | 0.017 | 0.025 |
+| RubberSystem: isNearWall (100 segments) | 2000 | 0.005 | 0.760 | 0.009 | 0.007 | 0.012 | 0.017 |
+| RubberSystem: calculateSpeedAdjustment | 1000 | 0.004 | 6.916 | 0.018 | 0.007 | 0.011 | 0.035 |
+| RubberSystem: applyRubberCollision | 500 | 0.004 | 0.956 | 0.012 | 0.006 | 0.033 | 0.043 |
+| EntityManager: Create 100 entities | 500 | 0.095 | 1.251 | 0.123 | 0.106 | 0.142 | 0.821 |
+| EntityManager: Create 1000 entities | 100 | 0.704 | 4.113 | 1.252 | 1.106 | 2.424 | 3.509 |
+| EntityManager: Create 10000 entities | 20 | 17.105 | 49.796 | 30.380 | 28.410 | 48.812 | 49.599 |
+| EntityManager: Update 100 entities | 500 | 0.119 | 1.447 | 0.176 | 0.142 | 0.292 | 1.020 |
+| EntityManager: Query by type (1000 entities) | 500 | 0.609 | 3.500 | 1.045 | 0.990 | 2.092 | 2.762 |
+| EntityManager: Query by component (1000 entities) | 500 | 1.113 | 5.404 | 1.858 | 1.838 | 2.980 | 4.092 |
+| EntityManager: Query AND (position + velocity) | 500 | 1.209 | 9.033 | 2.096 | 2.049 | 3.280 | 4.811 |
+| EntityManager: Destroy 100 entities | 500 | 0.111 | 1.898 | 0.152 | 0.131 | 0.188 | 0.546 |
+| EntityManager: Clear 1000 entities | 100 | 0.696 | 2.574 | 1.189 | 1.097 | 2.207 | 2.470 |
+
+## Detailed Results
+
+### SpatialHash: Insert 100 entities
+
+Insert 100 entities into SpatialHash
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 22.75ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.033 ms |
+| Max | 0.479 ms |
+| Average | 0.045 ms |
+| Median | 0.036 ms |
+| P95 | 0.076 ms |
+| P99 | 0.193 ms |
+| Std Dev | 0.035 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.03, 0.48] ms
+
+0.03 - 0.08 | ######################################## (477)
+0.08 - 0.12 | # (10)
+0.12 - 0.17 |  (3)
+0.17 - 0.21 |  (5)
+0.21 - 0.26 |  (3)
+0.26 - 0.30 |  (0)
+0.30 - 0.35 |  (0)
+0.35 - 0.39 |  (1)
+0.39 - 0.43 |  (0)
+0.43 - 0.48 |  (1)
+```
+
+
+### SpatialHash: Insert 1000 entities
+
+Insert 1000 entities into SpatialHash
+
+**Configuration:**
+- Iterations: 100
+- Warmup: 100
+- Total Duration: 50.93ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 100 |
+| Min | 0.281 ms |
+| Max | 2.111 ms |
+| Average | 0.507 ms |
+| Median | 0.404 ms |
+| P95 | 1.006 ms |
+| P99 | 1.540 ms |
+| Std Dev | 0.284 ms |
+| Variance | 0.080 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.28, 2.11] ms
+
+0.28 - 0.46 | ######################################## (76)
+0.46 - 0.65 | ### (6)
+0.65 - 0.83 | ### (5)
+0.83 - 1.01 | #### (8)
+1.01 - 1.20 | # (2)
+1.20 - 1.38 | # (1)
+1.38 - 1.56 | # (1)
+1.56 - 1.75 |  (0)
+1.75 - 1.93 |  (0)
+1.93 - 2.11 | # (1)
+```
+
+
+### SpatialHash: Insert 10000 entities
+
+Insert 10000 entities into SpatialHash
+
+**Configuration:**
+- Iterations: 20
+- Warmup: 100
+- Total Duration: 147.99ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 20 |
+| Min | 4.716 ms |
+| Max | 17.914 ms |
+| Average | 7.379 ms |
+| Median | 5.832 ms |
+| P95 | 13.869 ms |
+| P99 | 17.105 ms |
+| Std Dev | 3.281 ms |
+| Variance | 10.762 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [4.72, 17.91] ms
+
+4.72 - 6.04 | ######################################## (11)
+6.04 - 7.36 | #### (1)
+7.36 - 8.68 | ########### (3)
+8.68 - 10.00 | ########### (3)
+10.00 - 11.32 |  (0)
+11.32 - 12.63 |  (0)
+12.63 - 13.95 | #### (1)
+13.95 - 15.27 |  (0)
+15.27 - 16.59 |  (0)
+16.59 - 17.91 | #### (1)
+```
+
+
+### SpatialHash: Query 100 entities (radius=10)
+
+Query range with 100 entities
+
+**Configuration:**
+- Iterations: 1000
+- Warmup: 100
+- Total Duration: 59.34ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 1000 |
+| Min | 0.036 ms |
+| Max | 3.562 ms |
+| Average | 0.059 ms |
+| Median | 0.041 ms |
+| P95 | 0.069 ms |
+| P99 | 0.147 ms |
+| Std Dev | 0.173 ms |
+| Variance | 0.030 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.04, 3.56] ms
+
+0.04 - 0.39 | ######################################## (993)
+0.39 - 0.74 |  (0)
+0.74 - 1.09 |  (4)
+1.09 - 1.45 |  (0)
+1.45 - 1.80 |  (0)
+1.80 - 2.15 |  (0)
+2.15 - 2.50 |  (1)
+2.50 - 2.86 |  (0)
+2.86 - 3.21 |  (0)
+3.21 - 3.56 |  (2)
+```
+
+
+### SpatialHash: Query 1000 entities (radius=10)
+
+Query range with 1000 entities
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 198.27ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.277 ms |
+| Max | 1.464 ms |
+| Average | 0.396 ms |
+| Median | 0.376 ms |
+| P95 | 0.501 ms |
+| P99 | 1.308 ms |
+| Std Dev | 0.171 ms |
+| Variance | 0.029 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.28, 1.46] ms
+
+0.28 - 0.40 | ######################################## (297)
+0.40 - 0.51 | ######################## (178)
+0.51 - 0.63 | # (7)
+0.63 - 0.75 |  (2)
+0.75 - 0.87 |  (0)
+0.87 - 0.99 |  (0)
+0.99 - 1.11 |  (2)
+1.11 - 1.23 | # (5)
+1.23 - 1.35 | # (5)
+1.35 - 1.46 | # (4)
+```
+
+
+### SpatialHash: Query 10000 entities (radius=10)
+
+Query range with 10000 entities
+
+**Configuration:**
+- Iterations: 100
+- Warmup: 100
+- Total Duration: 816.58ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 100 |
+| Min | 4.600 ms |
+| Max | 24.346 ms |
+| Average | 8.156 ms |
+| Median | 7.356 ms |
+| P95 | 13.024 ms |
+| P99 | 18.564 ms |
+| Std Dev | 3.202 ms |
+| Variance | 10.255 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [4.60, 24.35] ms
+
+4.60 - 6.57 | ###################################### (34)
+6.57 - 8.55 | ######################################## (36)
+8.55 - 10.52 | ########## (9)
+10.52 - 12.50 | ############ (11)
+12.50 - 14.47 | ######## (7)
+14.47 - 16.45 | # (1)
+16.45 - 18.42 |  (0)
+18.42 - 20.40 | # (1)
+20.40 - 22.37 |  (0)
+22.37 - 24.35 | # (1)
+```
+
+
+### SpatialHash: Query IDs 1000 entities
+
+Query IDs only (no distance calc)
+
+**Configuration:**
+- Iterations: 1000
+- Warmup: 100
+- Total Duration: 396.48ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 1000 |
+| Min | 0.269 ms |
+| Max | 1.732 ms |
+| Average | 0.396 ms |
+| Median | 0.371 ms |
+| P95 | 0.676 ms |
+| P99 | 1.155 ms |
+| Std Dev | 0.168 ms |
+| Variance | 0.028 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.27, 1.73] ms
+
+0.27 - 0.42 | ######################################## (667)
+0.42 - 0.56 | ################ (271)
+0.56 - 0.71 | # (13)
+0.71 - 0.85 | # (10)
+0.85 - 1.00 | # (15)
+1.00 - 1.15 | # (12)
+1.15 - 1.29 | # (9)
+1.29 - 1.44 |  (1)
+1.44 - 1.59 |  (0)
+1.59 - 1.73 |  (2)
+```
+
+
+### SpatialHash: Update 100 entities
+
+Update positions of 100 entities
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 31.08ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.041 ms |
+| Max | 0.903 ms |
+| Average | 0.062 ms |
+| Median | 0.052 ms |
+| P95 | 0.084 ms |
+| P99 | 0.138 ms |
+| Std Dev | 0.051 ms |
+| Variance | 0.003 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.04, 0.90] ms
+
+0.04 - 0.13 | ######################################## (493)
+0.13 - 0.21 |  (3)
+0.21 - 0.30 |  (2)
+0.30 - 0.39 |  (0)
+0.39 - 0.47 |  (0)
+0.47 - 0.56 |  (0)
+0.56 - 0.64 |  (0)
+0.64 - 0.73 |  (1)
+0.73 - 0.82 |  (0)
+0.82 - 0.90 |  (1)
+```
+
+
+### SpatialHash: Update 1000 entities
+
+Update positions of 1000 entities
+
+**Configuration:**
+- Iterations: 100
+- Warmup: 100
+- Total Duration: 56.30ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 100 |
+| Min | 0.337 ms |
+| Max | 1.592 ms |
+| Average | 0.561 ms |
+| Median | 0.555 ms |
+| P95 | 0.735 ms |
+| P99 | 1.301 ms |
+| Std Dev | 0.186 ms |
+| Variance | 0.035 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.34, 1.59] ms
+
+0.34 - 0.46 | ################ (21)
+0.46 - 0.59 | ######################################## (52)
+0.59 - 0.71 | ################ (21)
+0.71 - 0.84 | # (1)
+0.84 - 0.96 |  (0)
+0.96 - 1.09 | ## (2)
+1.09 - 1.22 |  (0)
+1.22 - 1.34 | ## (2)
+1.34 - 1.47 |  (0)
+1.47 - 1.59 | # (1)
+```
+
+
+### SpatialHash: Remove 100 entities
+
+Remove 100 entities
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 25.36ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.037 ms |
+| Max | 0.701 ms |
+| Average | 0.050 ms |
+| Median | 0.040 ms |
+| P95 | 0.088 ms |
+| P99 | 0.119 ms |
+| Std Dev | 0.043 ms |
+| Variance | 0.002 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.04, 0.70] ms
+
+0.04 - 0.10 | ######################################## (490)
+0.10 - 0.17 |  (6)
+0.17 - 0.24 |  (0)
+0.24 - 0.30 |  (1)
+0.30 - 0.37 |  (1)
+0.37 - 0.44 |  (0)
+0.44 - 0.50 |  (0)
+0.50 - 0.57 |  (1)
+0.57 - 0.63 |  (0)
+0.63 - 0.70 |  (1)
+```
+
+
+### CollisionDetection: distanceToSegment (basic)
+
+Basic point to segment distance
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 22.28ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 13.260 ms |
+| Average | 0.002 ms |
+| Median | 0.001 ms |
+| P95 | 0.001 ms |
+| P99 | 0.002 ms |
+| Std Dev | 0.133 ms |
+| Variance | 0.018 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 13.26] ms
+
+0.00 - 1.33 | ######################################## (9999)
+1.33 - 2.65 |  (0)
+2.65 - 3.98 |  (0)
+3.98 - 5.30 |  (0)
+5.30 - 6.63 |  (0)
+6.63 - 7.96 |  (0)
+7.96 - 9.28 |  (0)
+9.28 - 10.61 |  (0)
+10.61 - 11.93 |  (0)
+11.93 - 13.26 |  (1)
+```
+
+
+### CollisionDetection: distanceToSegmentWithClosest
+
+Distance with closest point calculation
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 9.59ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 0.068 ms |
+| Average | 0.001 ms |
+| Median | 0.001 ms |
+| P95 | 0.001 ms |
+| P99 | 0.002 ms |
+| Std Dev | 0.001 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.07] ms
+
+0.00 - 0.01 | ######################################## (9979)
+0.01 - 0.01 |  (10)
+0.01 - 0.02 |  (2)
+0.02 - 0.03 |  (2)
+0.03 - 0.03 |  (1)
+0.03 - 0.04 |  (2)
+0.04 - 0.05 |  (1)
+0.05 - 0.05 |  (0)
+0.05 - 0.06 |  (2)
+0.06 - 0.07 |  (1)
+```
+
+
+### CollisionDetection: distanceToSegmentSquared
+
+Squared distance (no sqrt)
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 11.12ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 0.695 ms |
+| Average | 0.001 ms |
+| Median | 0.001 ms |
+| P95 | 0.001 ms |
+| P99 | 0.002 ms |
+| Std Dev | 0.008 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.69] ms
+
+0.00 - 0.07 | ######################################## (9994)
+0.07 - 0.14 |  (3)
+0.14 - 0.21 |  (2)
+0.21 - 0.28 |  (0)
+0.28 - 0.35 |  (0)
+0.35 - 0.42 |  (0)
+0.42 - 0.49 |  (0)
+0.49 - 0.56 |  (0)
+0.56 - 0.63 |  (0)
+0.63 - 0.69 |  (1)
+```
+
+
+### CollisionDetection: distanceToSegment (100 segments)
+
+Distance to 100 segments
+
+**Configuration:**
+- Iterations: 1000
+- Warmup: 100
+- Total Duration: 28.68ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 1000 |
+| Min | 0.010 ms |
+| Max | 2.396 ms |
+| Average | 0.028 ms |
+| Median | 0.012 ms |
+| P95 | 0.056 ms |
+| P99 | 0.093 ms |
+| Std Dev | 0.083 ms |
+| Variance | 0.007 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.01, 2.40] ms
+
+0.01 - 0.25 | ######################################## (997)
+0.25 - 0.49 |  (1)
+0.49 - 0.73 |  (0)
+0.73 - 0.96 |  (1)
+0.96 - 1.20 |  (0)
+1.20 - 1.44 |  (0)
+1.44 - 1.68 |  (0)
+1.68 - 1.92 |  (0)
+1.92 - 2.16 |  (0)
+2.16 - 2.40 |  (1)
+```
+
+
+### CollisionDetection: distanceToSegment (1000 segments)
+
+Distance to 1000 segments
+
+**Configuration:**
+- Iterations: 200
+- Warmup: 100
+- Total Duration: 28.33ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 200 |
+| Min | 0.096 ms |
+| Max | 1.049 ms |
+| Average | 0.141 ms |
+| Median | 0.107 ms |
+| P95 | 0.241 ms |
+| P99 | 0.901 ms |
+| Std Dev | 0.123 ms |
+| Variance | 0.015 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.10, 1.05] ms
+
+0.10 - 0.19 | ######################################## (184)
+0.19 - 0.29 | ## (7)
+0.29 - 0.38 | # (3)
+0.38 - 0.48 |  (1)
+0.48 - 0.57 |  (1)
+0.57 - 0.67 |  (0)
+0.67 - 0.76 |  (1)
+0.76 - 0.86 |  (0)
+0.86 - 0.95 |  (2)
+0.95 - 1.05 |  (1)
+```
+
+
+### CollisionDetection: lineSegmentIntersection (basic)
+
+Basic line segment intersection
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 13.35ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 3.837 ms |
+| Average | 0.001 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.002 ms |
+| Std Dev | 0.045 ms |
+| Variance | 0.002 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 3.84] ms
+
+0.00 - 0.38 | ######################################## (9998)
+0.38 - 0.77 |  (0)
+0.77 - 1.15 |  (0)
+1.15 - 1.53 |  (0)
+1.53 - 1.92 |  (0)
+1.92 - 2.30 |  (0)
+2.30 - 2.69 |  (1)
+2.69 - 3.07 |  (0)
+3.07 - 3.45 |  (0)
+3.45 - 3.84 |  (1)
+```
+
+
+### CollisionDetection: lineSegmentIntersection (parallel)
+
+Parallel lines intersection test
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 6.00ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 1.398 ms |
+| Average | 0.000 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.014 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 1.40] ms
+
+0.00 - 0.14 | ######################################## (9998)
+0.14 - 0.28 |  (1)
+0.28 - 0.42 |  (0)
+0.42 - 0.56 |  (0)
+0.56 - 0.70 |  (0)
+0.70 - 0.84 |  (0)
+0.84 - 0.98 |  (0)
+0.98 - 1.12 |  (0)
+1.12 - 1.26 |  (0)
+1.26 - 1.40 |  (1)
+```
+
+
+### CollisionDetection: intersection vs 100 segments
+
+Intersection test with 100 segments
+
+**Configuration:**
+- Iterations: 1000
+- Warmup: 100
+- Total Duration: 25.89ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 1000 |
+| Min | 0.012 ms |
+| Max | 4.057 ms |
+| Average | 0.026 ms |
+| Median | 0.015 ms |
+| P95 | 0.026 ms |
+| P99 | 0.076 ms |
+| Std Dev | 0.143 ms |
+| Variance | 0.021 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.01, 4.06] ms
+
+0.01 - 0.42 | ######################################## (994)
+0.42 - 0.82 |  (2)
+0.82 - 1.23 |  (2)
+1.23 - 1.63 |  (1)
+1.63 - 2.03 |  (0)
+2.03 - 2.44 |  (0)
+2.44 - 2.84 |  (0)
+2.84 - 3.25 |  (0)
+3.25 - 3.65 |  (0)
+3.65 - 4.06 |  (1)
+```
+
+
+### CollisionDetection: continuousCollisionCheck (10 segments)
+
+CCD with 10 segments
+
+**Configuration:**
+- Iterations: 2000
+- Warmup: 100
+- Total Duration: 15.54ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 2000 |
+| Min | 0.001 ms |
+| Max | 1.036 ms |
+| Average | 0.008 ms |
+| Median | 0.005 ms |
+| P95 | 0.010 ms |
+| P99 | 0.029 ms |
+| Std Dev | 0.035 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 1.04] ms
+
+0.00 - 0.10 | ######################################## (1987)
+0.10 - 0.21 |  (6)
+0.21 - 0.31 |  (4)
+0.31 - 0.42 |  (0)
+0.42 - 0.52 |  (1)
+0.52 - 0.62 |  (0)
+0.62 - 0.73 |  (0)
+0.73 - 0.83 |  (0)
+0.83 - 0.93 |  (1)
+0.93 - 1.04 |  (1)
+```
+
+
+### CollisionDetection: continuousCollisionCheck (100 segments)
+
+CCD with 100 segments
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 14.25ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.011 ms |
+| Max | 2.893 ms |
+| Average | 0.028 ms |
+| Median | 0.019 ms |
+| P95 | 0.036 ms |
+| P99 | 0.170 ms |
+| Std Dev | 0.130 ms |
+| Variance | 0.017 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.01, 2.89] ms
+
+0.01 - 0.30 | ######################################## (498)
+0.30 - 0.59 |  (1)
+0.59 - 0.88 |  (0)
+0.88 - 1.16 |  (0)
+1.16 - 1.45 |  (0)
+1.45 - 1.74 |  (0)
+1.74 - 2.03 |  (0)
+2.03 - 2.32 |  (0)
+2.32 - 2.61 |  (0)
+2.61 - 2.89 |  (1)
+```
+
+
+### CollisionDetection: checkTrailCollision
+
+Trail collision check
+
+**Configuration:**
+- Iterations: 1000
+- Warmup: 100
+- Total Duration: 11.83ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 1000 |
+| Min | 0.007 ms |
+| Max | 0.618 ms |
+| Average | 0.012 ms |
+| Median | 0.010 ms |
+| P95 | 0.016 ms |
+| P99 | 0.029 ms |
+| Std Dev | 0.027 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.01, 0.62] ms
+
+0.01 - 0.07 | ######################################## (996)
+0.07 - 0.13 |  (1)
+0.13 - 0.19 |  (1)
+0.19 - 0.25 |  (0)
+0.25 - 0.31 |  (0)
+0.31 - 0.37 |  (0)
+0.37 - 0.44 |  (0)
+0.44 - 0.50 |  (0)
+0.50 - 0.56 |  (1)
+0.56 - 0.62 |  (1)
+```
+
+
+### CollisionDetection: checkBikeCollision (10 players)
+
+Bike collision with 10 players
+
+**Configuration:**
+- Iterations: 2000
+- Warmup: 100
+- Total Duration: 10.00ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 2000 |
+| Min | 0.001 ms |
+| Max | 5.599 ms |
+| Average | 0.005 ms |
+| Median | 0.001 ms |
+| P95 | 0.009 ms |
+| P99 | 0.016 ms |
+| Std Dev | 0.125 ms |
+| Variance | 0.016 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 5.60] ms
+
+0.00 - 0.56 | ######################################## (1999)
+0.56 - 1.12 |  (0)
+1.12 - 1.68 |  (0)
+1.68 - 2.24 |  (0)
+2.24 - 2.80 |  (0)
+2.80 - 3.36 |  (0)
+3.36 - 3.92 |  (0)
+3.92 - 4.48 |  (0)
+4.48 - 5.04 |  (0)
+5.04 - 5.60 |  (1)
+```
+
+
+### CollisionDetection: checkBikeCollision (50 players)
+
+Bike collision with 50 players
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 5.35ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.005 ms |
+| Max | 0.110 ms |
+| Average | 0.011 ms |
+| Median | 0.010 ms |
+| P95 | 0.015 ms |
+| P99 | 0.029 ms |
+| Std Dev | 0.007 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.11] ms
+
+0.00 - 0.02 | ######################################## (483)
+0.02 - 0.03 | # (11)
+0.03 - 0.04 |  (2)
+0.04 - 0.05 |  (2)
+0.05 - 0.06 |  (0)
+0.06 - 0.07 |  (0)
+0.07 - 0.08 |  (0)
+0.08 - 0.09 |  (0)
+0.09 - 0.10 |  (1)
+0.10 - 0.11 |  (1)
+```
+
+
+### CollisionDetection: checkArenaBounds (inside)
+
+Arena bounds check (inside)
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 5.08ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 0.851 ms |
+| Average | 0.000 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.009 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.85] ms
+
+0.00 - 0.09 | ######################################## (9999)
+0.09 - 0.17 |  (0)
+0.17 - 0.26 |  (0)
+0.26 - 0.34 |  (0)
+0.34 - 0.43 |  (0)
+0.43 - 0.51 |  (0)
+0.51 - 0.60 |  (0)
+0.60 - 0.68 |  (0)
+0.68 - 0.77 |  (0)
+0.77 - 0.85 |  (1)
+```
+
+
+### CollisionDetection: checkArenaBounds (outside)
+
+Arena bounds check (outside)
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 13.76ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 2.532 ms |
+| Average | 0.001 ms |
+| Median | 0.000 ms |
+| P95 | 0.002 ms |
+| P99 | 0.002 ms |
+| Std Dev | 0.035 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 2.53] ms
+
+0.00 - 0.25 | ######################################## (9998)
+0.25 - 0.51 |  (0)
+0.51 - 0.76 |  (0)
+0.76 - 1.01 |  (0)
+1.01 - 1.27 |  (0)
+1.27 - 1.52 |  (0)
+1.52 - 1.77 |  (0)
+1.77 - 2.03 |  (0)
+2.03 - 2.28 |  (0)
+2.28 - 2.53 |  (2)
+```
+
+
+### CollisionDetection: isPointNearSegment
+
+Point near segment check
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 6.52ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 1.954 ms |
+| Average | 0.001 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.020 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 1.95] ms
+
+0.00 - 0.20 | ######################################## (9999)
+0.20 - 0.39 |  (0)
+0.39 - 0.59 |  (0)
+0.59 - 0.78 |  (0)
+0.78 - 0.98 |  (0)
+0.98 - 1.17 |  (0)
+1.17 - 1.37 |  (0)
+1.37 - 1.56 |  (0)
+1.56 - 1.76 |  (0)
+1.76 - 1.95 |  (1)
+```
+
+
+### RubberSystem: Create RubberState
+
+Create new RubberState instance
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 5.84ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 0.167 ms |
+| Average | 0.000 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.003 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.17] ms
+
+0.00 - 0.02 | ######################################## (9988)
+0.02 - 0.03 |  (4)
+0.03 - 0.05 |  (2)
+0.05 - 0.07 |  (1)
+0.07 - 0.08 |  (1)
+0.08 - 0.10 |  (1)
+0.10 - 0.12 |  (0)
+0.12 - 0.13 |  (1)
+0.13 - 0.15 |  (1)
+0.15 - 0.17 |  (1)
+```
+
+
+### RubberSystem: updateRubber
+
+Update rubber with decay
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 15.94ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 3.419 ms |
+| Average | 0.001 ms |
+| Median | 0.001 ms |
+| P95 | 0.001 ms |
+| P99 | 0.002 ms |
+| Std Dev | 0.042 ms |
+| Variance | 0.002 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 3.42] ms
+
+0.00 - 0.34 | ######################################## (9997)
+0.34 - 0.68 |  (0)
+0.68 - 1.03 |  (0)
+1.03 - 1.37 |  (1)
+1.37 - 1.71 |  (0)
+1.71 - 2.05 |  (1)
+2.05 - 2.39 |  (0)
+2.39 - 2.74 |  (0)
+2.74 - 3.08 |  (0)
+3.08 - 3.42 |  (1)
+```
+
+
+### RubberSystem: applyMalus
+
+Apply malus penalty
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 10.01ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 2.612 ms |
+| Average | 0.001 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.032 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 2.61] ms
+
+0.00 - 0.26 | ######################################## (9997)
+0.26 - 0.52 |  (0)
+0.52 - 0.78 |  (0)
+0.78 - 1.05 |  (1)
+1.05 - 1.31 |  (0)
+1.31 - 1.57 |  (1)
+1.57 - 1.83 |  (0)
+1.83 - 2.09 |  (0)
+2.09 - 2.35 |  (0)
+2.35 - 2.61 |  (1)
+```
+
+
+### RubberSystem: calculateEffectiveness
+
+Calculate rubber effectiveness
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 5.29ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 0.050 ms |
+| Average | 0.000 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.001 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.05] ms
+
+0.00 - 0.01 | ######################################## (9992)
+0.01 - 0.01 |  (1)
+0.01 - 0.02 |  (0)
+0.02 - 0.02 |  (0)
+0.02 - 0.02 |  (0)
+0.02 - 0.03 |  (0)
+0.03 - 0.03 |  (2)
+0.03 - 0.04 |  (1)
+0.04 - 0.04 |  (2)
+0.04 - 0.05 |  (2)
+```
+
+
+### RubberSystem: consumeRubber
+
+Consume rubber amount
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 5.80ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 0.839 ms |
+| Average | 0.000 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.008 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.84] ms
+
+0.00 - 0.08 | ######################################## (9999)
+0.08 - 0.17 |  (0)
+0.17 - 0.25 |  (0)
+0.25 - 0.34 |  (0)
+0.34 - 0.42 |  (0)
+0.42 - 0.50 |  (0)
+0.50 - 0.59 |  (0)
+0.59 - 0.67 |  (0)
+0.67 - 0.76 |  (0)
+0.76 - 0.84 |  (1)
+```
+
+
+### RubberSystem: regenerateRubber
+
+Regenerate rubber over time
+
+**Configuration:**
+- Iterations: 10000
+- Warmup: 100
+- Total Duration: 5.90ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 10000 |
+| Min | 0.000 ms |
+| Max | 0.075 ms |
+| Average | 0.000 ms |
+| Median | 0.000 ms |
+| P95 | 0.001 ms |
+| P99 | 0.001 ms |
+| Std Dev | 0.002 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.07] ms
+
+0.00 - 0.01 | ######################################## (9984)
+0.01 - 0.02 |  (3)
+0.02 - 0.02 |  (3)
+0.02 - 0.03 |  (0)
+0.03 - 0.04 |  (4)
+0.04 - 0.04 |  (2)
+0.04 - 0.05 |  (1)
+0.05 - 0.06 |  (0)
+0.06 - 0.07 |  (0)
+0.07 - 0.07 |  (3)
+```
+
+
+### RubberSystem: detectWallProximity (10 segments)
+
+Detect wall proximity with 10 segments
+
+**Configuration:**
+- Iterations: 2000
+- Warmup: 100
+- Total Duration: 8.40ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 2000 |
+| Min | 0.001 ms |
+| Max | 0.825 ms |
+| Average | 0.004 ms |
+| Median | 0.001 ms |
+| P95 | 0.007 ms |
+| P99 | 0.012 ms |
+| Std Dev | 0.020 ms |
+| Variance | 0.000 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.82] ms
+
+0.00 - 0.08 | ######################################## (1996)
+0.08 - 0.17 |  (3)
+0.17 - 0.25 |  (0)
+0.25 - 0.33 |  (0)
+0.33 - 0.41 |  (0)
+0.41 - 0.50 |  (0)
+0.50 - 0.58 |  (0)
+0.58 - 0.66 |  (0)
+0.66 - 0.74 |  (0)
+0.74 - 0.82 |  (1)
+```
+
+
+### RubberSystem: detectWallProximity (100 segments)
+
+Detect wall proximity with 100 segments
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 4.80ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.007 ms |
+| Max | 0.539 ms |
+| Average | 0.009 ms |
+| Median | 0.008 ms |
+| P95 | 0.010 ms |
+| P99 | 0.032 ms |
+| Std Dev | 0.024 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.01, 0.54] ms
+
+0.01 - 0.06 | ######################################## (498)
+0.06 - 0.11 |  (1)
+0.11 - 0.17 |  (0)
+0.17 - 0.22 |  (0)
+0.22 - 0.27 |  (0)
+0.27 - 0.33 |  (0)
+0.33 - 0.38 |  (0)
+0.38 - 0.43 |  (0)
+0.43 - 0.49 |  (0)
+0.49 - 0.54 |  (1)
+```
+
+
+### RubberSystem: calculateWallDistance (100 segments)
+
+Calculate wall distance
+
+**Configuration:**
+- Iterations: 1000
+- Warmup: 100
+- Total Duration: 14.13ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 1000 |
+| Min | 0.010 ms |
+| Max | 0.856 ms |
+| Average | 0.014 ms |
+| Median | 0.012 ms |
+| P95 | 0.017 ms |
+| P99 | 0.025 ms |
+| Std Dev | 0.036 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.01, 0.86] ms
+
+0.01 - 0.09 | ######################################## (998)
+0.09 - 0.18 |  (0)
+0.18 - 0.26 |  (0)
+0.26 - 0.35 |  (0)
+0.35 - 0.43 |  (0)
+0.43 - 0.52 |  (0)
+0.52 - 0.60 |  (0)
+0.60 - 0.69 |  (0)
+0.69 - 0.77 |  (0)
+0.77 - 0.86 |  (2)
+```
+
+
+### RubberSystem: isNearWall (100 segments)
+
+Check if near wall
+
+**Configuration:**
+- Iterations: 2000
+- Warmup: 100
+- Total Duration: 18.02ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 2000 |
+| Min | 0.005 ms |
+| Max | 0.760 ms |
+| Average | 0.009 ms |
+| Median | 0.007 ms |
+| P95 | 0.012 ms |
+| P99 | 0.017 ms |
+| Std Dev | 0.024 ms |
+| Variance | 0.001 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.01, 0.76] ms
+
+0.01 - 0.08 | ######################################## (1997)
+0.08 - 0.16 |  (0)
+0.16 - 0.23 |  (0)
+0.23 - 0.31 |  (0)
+0.31 - 0.38 |  (0)
+0.38 - 0.46 |  (0)
+0.46 - 0.53 |  (1)
+0.53 - 0.61 |  (1)
+0.61 - 0.68 |  (0)
+0.68 - 0.76 |  (1)
+```
+
+
+### RubberSystem: calculateSpeedAdjustment
+
+Calculate speed adjustment near walls
+
+**Configuration:**
+- Iterations: 1000
+- Warmup: 100
+- Total Duration: 18.54ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 1000 |
+| Min | 0.004 ms |
+| Max | 6.916 ms |
+| Average | 0.018 ms |
+| Median | 0.007 ms |
+| P95 | 0.011 ms |
+| P99 | 0.035 ms |
+| Std Dev | 0.253 ms |
+| Variance | 0.064 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 6.92] ms
+
+0.00 - 0.70 | ######################################## (998)
+0.70 - 1.39 |  (0)
+1.39 - 2.08 |  (0)
+2.08 - 2.77 |  (0)
+2.77 - 3.46 |  (0)
+3.46 - 4.15 |  (1)
+4.15 - 4.84 |  (0)
+4.84 - 5.53 |  (0)
+5.53 - 6.22 |  (0)
+6.22 - 6.92 |  (1)
+```
+
+
+### RubberSystem: applyRubberCollision
+
+Full rubber collision response
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 5.96ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.004 ms |
+| Max | 0.956 ms |
+| Average | 0.012 ms |
+| Median | 0.006 ms |
+| P95 | 0.033 ms |
+| P99 | 0.043 ms |
+| Std Dev | 0.049 ms |
+| Variance | 0.002 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.00, 0.96] ms
+
+0.00 - 0.10 | ######################################## (496)
+0.10 - 0.19 |  (2)
+0.19 - 0.29 |  (0)
+0.29 - 0.38 |  (0)
+0.38 - 0.48 |  (0)
+0.48 - 0.58 |  (1)
+0.58 - 0.67 |  (0)
+0.67 - 0.77 |  (0)
+0.77 - 0.86 |  (0)
+0.86 - 0.96 |  (1)
+```
+
+
+### EntityManager: Create 100 entities
+
+Create 100 entities
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 61.90ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.095 ms |
+| Max | 1.251 ms |
+| Average | 0.123 ms |
+| Median | 0.106 ms |
+| P95 | 0.142 ms |
+| P99 | 0.821 ms |
+| Std Dev | 0.095 ms |
+| Variance | 0.009 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.10, 1.25] ms
+
+0.10 - 0.21 | ######################################## (486)
+0.21 - 0.33 | # (7)
+0.33 - 0.44 |  (1)
+0.44 - 0.56 |  (0)
+0.56 - 0.67 |  (0)
+0.67 - 0.79 |  (0)
+0.79 - 0.90 |  (4)
+0.90 - 1.02 |  (1)
+1.02 - 1.14 |  (0)
+1.14 - 1.25 |  (1)
+```
+
+
+### EntityManager: Create 1000 entities
+
+Create 1000 entities
+
+**Configuration:**
+- Iterations: 100
+- Warmup: 100
+- Total Duration: 125.30ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 100 |
+| Min | 0.704 ms |
+| Max | 4.113 ms |
+| Average | 1.252 ms |
+| Median | 1.106 ms |
+| P95 | 2.424 ms |
+| P99 | 3.509 ms |
+| Std Dev | 0.558 ms |
+| Variance | 0.311 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.70, 4.11] ms
+
+0.70 - 1.05 | ################# (24)
+1.05 - 1.39 | ######################################## (58)
+1.39 - 1.73 | ###### (8)
+1.73 - 2.07 | # (2)
+2.07 - 2.41 | # (2)
+2.41 - 2.75 | # (2)
+2.75 - 3.09 | # (2)
+3.09 - 3.43 |  (0)
+3.43 - 3.77 | # (1)
+3.77 - 4.11 | # (1)
+```
+
+
+### EntityManager: Create 10000 entities
+
+Create 10000 entities
+
+**Configuration:**
+- Iterations: 20
+- Warmup: 100
+- Total Duration: 607.74ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 20 |
+| Min | 17.105 ms |
+| Max | 49.796 ms |
+| Average | 30.380 ms |
+| Median | 28.410 ms |
+| P95 | 48.812 ms |
+| P99 | 49.599 ms |
+| Std Dev | 8.537 ms |
+| Variance | 72.881 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [17.10, 49.80] ms
+
+17.10 - 20.37 | ############# (2)
+20.37 - 23.64 | ####### (1)
+23.64 - 26.91 | ######################################## (6)
+26.91 - 30.18 | ############# (2)
+30.18 - 33.45 | ########################### (4)
+33.45 - 36.72 | ####### (1)
+36.72 - 39.99 | ############# (2)
+39.99 - 43.26 |  (0)
+43.26 - 46.53 |  (0)
+46.53 - 49.80 | ############# (2)
+```
+
+
+### EntityManager: Update 100 entities
+
+Update 100 entities
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 89.58ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.119 ms |
+| Max | 1.447 ms |
+| Average | 0.176 ms |
+| Median | 0.142 ms |
+| P95 | 0.292 ms |
+| P99 | 1.020 ms |
+| Std Dev | 0.140 ms |
+| Variance | 0.019 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.12, 1.45] ms
+
+0.12 - 0.25 | ######################################## (463)
+0.25 - 0.38 | ## (22)
+0.38 - 0.52 |  (4)
+0.52 - 0.65 |  (2)
+0.65 - 0.78 |  (2)
+0.78 - 0.92 |  (1)
+0.92 - 1.05 |  (1)
+1.05 - 1.18 |  (1)
+1.18 - 1.31 |  (2)
+1.31 - 1.45 |  (2)
+```
+
+
+### EntityManager: Query by type (1000 entities)
+
+Query entities by type
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 523.03ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.609 ms |
+| Max | 3.500 ms |
+| Average | 1.045 ms |
+| Median | 0.990 ms |
+| P95 | 2.092 ms |
+| P99 | 2.762 ms |
+| Std Dev | 0.447 ms |
+| Variance | 0.200 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.61, 3.50] ms
+
+0.61 - 0.90 | ############################ (166)
+0.90 - 1.19 | ######################################## (240)
+1.19 - 1.48 | ####### (41)
+1.48 - 1.77 | ### (20)
+1.77 - 2.05 | # (7)
+2.05 - 2.34 | # (7)
+2.34 - 2.63 | ## (10)
+2.63 - 2.92 | # (5)
+2.92 - 3.21 |  (1)
+3.21 - 3.50 | # (3)
+```
+
+
+### EntityManager: Query by component (1000 entities)
+
+Query entities by component
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 929.46ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 1.113 ms |
+| Max | 5.404 ms |
+| Average | 1.858 ms |
+| Median | 1.838 ms |
+| P95 | 2.980 ms |
+| P99 | 4.092 ms |
+| Std Dev | 0.649 ms |
+| Variance | 0.422 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [1.11, 5.40] ms
+
+1.11 - 1.54 | ######################################## (185)
+1.54 - 1.97 | ###################### (104)
+1.97 - 2.40 | ############################## (140)
+2.40 - 2.83 | ####### (34)
+2.83 - 3.26 | ##### (21)
+3.26 - 3.69 | ## (7)
+3.69 - 4.12 | # (4)
+4.12 - 4.55 |  (2)
+4.55 - 4.97 |  (1)
+4.97 - 5.40 |  (2)
+```
+
+
+### EntityManager: Query AND (position + velocity)
+
+Complex query with AND logic
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 1048.47ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 1.209 ms |
+| Max | 9.033 ms |
+| Average | 2.096 ms |
+| Median | 2.049 ms |
+| P95 | 3.280 ms |
+| P99 | 4.811 ms |
+| Std Dev | 0.822 ms |
+| Variance | 0.676 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [1.21, 9.03] ms
+
+1.21 - 1.99 | ######################################## (234)
+1.99 - 2.77 | ################################### (207)
+2.77 - 3.56 | ######## (44)
+3.56 - 4.34 | # (7)
+4.34 - 5.12 | # (4)
+5.12 - 5.90 |  (0)
+5.90 - 6.69 |  (0)
+6.69 - 7.47 |  (2)
+7.47 - 8.25 |  (1)
+8.25 - 9.03 |  (1)
+```
+
+
+### EntityManager: Destroy 100 entities
+
+Destroy 100 entities
+
+**Configuration:**
+- Iterations: 500
+- Warmup: 100
+- Total Duration: 76.15ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 500 |
+| Min | 0.111 ms |
+| Max | 1.898 ms |
+| Average | 0.152 ms |
+| Median | 0.131 ms |
+| P95 | 0.188 ms |
+| P99 | 0.546 ms |
+| Std Dev | 0.124 ms |
+| Variance | 0.015 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.11, 1.90] ms
+
+0.11 - 0.29 | ######################################## (490)
+0.29 - 0.47 |  (4)
+0.47 - 0.65 |  (1)
+0.65 - 0.83 |  (1)
+0.83 - 1.00 |  (2)
+1.00 - 1.18 |  (0)
+1.18 - 1.36 |  (0)
+1.36 - 1.54 |  (0)
+1.54 - 1.72 |  (0)
+1.72 - 1.90 |  (2)
+```
+
+
+### EntityManager: Clear 1000 entities
+
+Clear all entities
+
+**Configuration:**
+- Iterations: 100
+- Warmup: 100
+- Total Duration: 119.02ms
+
+**Statistics:**
+| Metric | Value |
+|--------|-------|
+| Count | 100 |
+| Min | 0.696 ms |
+| Max | 2.574 ms |
+| Average | 1.189 ms |
+| Median | 1.097 ms |
+| P95 | 2.207 ms |
+| P99 | 2.470 ms |
+| Std Dev | 0.379 ms |
+| Variance | 0.144 |
+
+**Distribution (ASCII Histogram):**
+
+```
+Range: [0.70, 2.57] ms
+
+0.70 - 0.88 | ###### (6)
+0.88 - 1.07 | ######################################## (37)
+1.07 - 1.26 | ####################################### (36)
+1.26 - 1.45 | ############# (12)
+1.45 - 1.63 |  (0)
+1.63 - 1.82 |  (0)
+1.82 - 2.01 |  (0)
+2.01 - 2.20 | ### (3)
+2.20 - 2.39 | ### (3)
+2.39 - 2.57 | ### (3)
+```
+
+
+## Recommendations
+
+- **SpatialHash: Insert 100 entities**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **SpatialHash: Insert 100 entities**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **SpatialHash: Insert 1000 entities**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **SpatialHash: Insert 10000 entities**: Consider optimizing spatial partitioning or reducing entity count for better performance.
+- **SpatialHash: Query 100 entities (radius=10)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **SpatialHash: Query 100 entities (radius=10)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **SpatialHash: Query 10000 entities (radius=10)**: Consider optimizing spatial partitioning or reducing entity count for better performance.
+- **SpatialHash: Update 100 entities**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **SpatialHash: Update 100 entities**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **SpatialHash: Remove 100 entities**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **SpatialHash: Remove 100 entities**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: distanceToSegment (basic)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: distanceToSegment (basic)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: distanceToSegmentWithClosest**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: distanceToSegmentWithClosest**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: distanceToSegmentSquared**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: distanceToSegmentSquared**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: distanceToSegment (100 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: distanceToSegment (100 segments)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: distanceToSegment (1000 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: lineSegmentIntersection (basic)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: lineSegmentIntersection (basic)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: lineSegmentIntersection (parallel)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: lineSegmentIntersection (parallel)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: intersection vs 100 segments**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: intersection vs 100 segments**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: continuousCollisionCheck (10 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: continuousCollisionCheck (10 segments)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: continuousCollisionCheck (100 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: continuousCollisionCheck (100 segments)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: checkTrailCollision**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: checkTrailCollision**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: checkBikeCollision (10 players)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: checkBikeCollision (10 players)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: checkBikeCollision (50 players)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: checkBikeCollision (50 players)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: checkArenaBounds (inside)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: checkArenaBounds (inside)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: checkArenaBounds (outside)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: checkArenaBounds (outside)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **CollisionDetection: isPointNearSegment**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **CollisionDetection: isPointNearSegment**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: Create RubberState**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: Create RubberState**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: updateRubber**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: updateRubber**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: applyMalus**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: applyMalus**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: calculateEffectiveness**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: calculateEffectiveness**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: consumeRubber**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: consumeRubber**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: regenerateRubber**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: regenerateRubber**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: detectWallProximity (10 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: detectWallProximity (10 segments)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: detectWallProximity (100 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: detectWallProximity (100 segments)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: calculateWallDistance (100 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: calculateWallDistance (100 segments)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: isNearWall (100 segments)**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: isNearWall (100 segments)**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: calculateSpeedAdjustment**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: calculateSpeedAdjustment**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **RubberSystem: applyRubberCollision**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **RubberSystem: applyRubberCollision**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+- **EntityManager: Create 100 entities**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **EntityManager: Update 100 entities**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **EntityManager: Destroy 100 entities**: High variance detected (stddev > 50% of avg). Consider increasing warmup iterations or checking for GC interference.
+- **EntityManager: Destroy 100 entities**: Significant outliers detected (max > 2x P99). May indicate occasional performance spikes.
+
+file:///home/property.sightlines/spacetime/cyber-client/tests/benchmarks/benchmark-runner.js:601
+        const fs = require('fs');
+                   ^
+
+ReferenceError: require is not defined
+    at BenchmarkRunner.saveToFile (file:///home/property.sightlines/spacetime/cyber-client/tests/benchmarks/benchmark-runner.js:601:20)
+    at file:///home/property.sightlines/spacetime/cyber-client/tests/benchmarks/physics.bench.js:681:16
+
+Node.js v20.20.0

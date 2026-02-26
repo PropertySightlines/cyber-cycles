@@ -1,9 +1,9 @@
-# 📋 Phase 1 Week 4 Tasks - Performance Testing & Polish
+# 📋 Phase 1 Week 4 Tasks - Performance Testing & Human-Ready Build
 
 **Week:** 4 of 8  
 **Dates:** March 18-24, 2026  
-**Focus:** Performance Testing, Benchmarking, Polish  
-**Status:** Pending
+**Focus:** Performance Testing, Polish, Human-Ready Build  
+**Status:** In Progress
 
 ---
 
@@ -13,7 +13,8 @@
 2. **Implement input buffering system**
 3. **Memory profiling and leak detection**
 4. **Edge case testing and stress tests**
-5. **Bug fixes and polish**
+5. **Human testing preparation** (single player, spectating AI)
+6. **Bug fixes and polish**
 
 ---
 
@@ -94,7 +95,22 @@
 
 ---
 
-### Task 6: Bug Fixes & Polish (Priority: HIGH)
+### Task 6: Human Testing Prep (Priority: CRITICAL)
+**Subtasks:**
+- [ ] Add AI spectating mode toggle
+- [ ] Single player vs AI mode
+- [ ] Simple in-game chat (local only for now)
+- [ ] Testing UI overlay (FPS, entities, memory)
+- [ ] Debug commands (pause, step, inspect)
+- [ ] Build script for VM deployment
+- [ ] Testing checklist document
+
+**Files:** `src/ui/TestOverlay.js`, `docs/HUMAN_TESTING_PLAN.md`  
+**Tests:** 25+ UI tests
+
+---
+
+### Task 7: Bug Fixes & Polish (Priority: HIGH)
 **Subtasks:**
 - [ ] Fix any issues from Week 1-3
 - [ ] Optimize hot paths
@@ -118,8 +134,9 @@
 | Memory Profile | 0 | 20 | 30 |
 | Edge Cases | 0 | 50 | 75 |
 | Stress Tests | 0 | 15 | 25 |
-| **Total New** | **0** | **155** | **240** |
-| **Cumulative** | **1345** | **1500** | **1585** |
+| UI/Testing | 0 | 25 | 40 |
+| **Total New** | **0** | **180** | **280** |
+| **Cumulative** | **1345** | **1525** | **1625** |
 
 ---
 
@@ -129,6 +146,8 @@
 cyber-client/src/
 ├── network/
 │   └── InputBuffer.js       🆕 Week 4
+├── ui/
+│   └── TestOverlay.js       🆕 Week 4 (debug UI)
 cyber-client/tests/
 ├── benchmarks/
 │   ├── benchmark-runner.js  🆕 Week 4
@@ -140,20 +159,27 @@ cyber-client/tests/
 │   ├── collision.test.js    🆕 Week 4
 │   ├── input.test.js        🆕 Week 4
 │   └── boundary.test.js     🆕 Week 4
-└── stress/
-    └── stress-runner.js     🆕 Week 4
+├── stress/
+│   └── stress-runner.js     🆕 Week 4
+└── network/
+    └── input-buffer.test.js 🆕 Week 4
 ```
 
 ---
 
 ## 🎯 Success Criteria
 
-- [ ] All 155+ new tests passing
+- [ ] All 180+ new tests passing
 - [ ] No regression in existing 1345 tests
 - [ ] Benchmark report generated
 - [ ] Memory profile documented
 - [ ] Stress test results documented
 - [ ] Input buffering functional
+- [ ] AI spectating mode working
+- [ ] Single player mode working
+- [ ] Test overlay showing FPS/stats
+- [ ] Build script for VM deployment
+- [ ] Human testing plan documented
 - [ ] Code committed and pushed
 
 ---
@@ -181,24 +207,31 @@ You are implementing input buffering for client-side prediction.
 
 Create: src/network/InputBuffer.js
 - Input timestamp tracking
-- Buffer management
+- Buffer management (add, get, clear)
 - Sequence numbers
 - Input reconciliation
 - Integration with PlayerEntity
 - Tests: 40+ tests
 ```
 
-**Memory Profiling Task:**
+**Human Testing Prep Task:**
 ```
-You are creating memory profiling tools.
+You are preparing the game for human testing.
 
-Create: tests/profiling/memory-profile.js
-- Entity allocation tracking
-- SpatialHash memory monitoring
-- Trail memory profiling
-- GC pressure measurement
-- Leak detection
-- Tests: 20+ tests
+Create: src/ui/TestOverlay.js
+- FPS counter
+- Entity count
+- Memory usage
+- Physics stats
+- Debug commands
+
+Add to main.js:
+- AI spectating toggle
+- Single player mode
+- Simple chat (local)
+- Debug overlay
+
+Tests: 25+ UI tests
 ```
 
 ---
@@ -210,66 +243,80 @@ Create: tests/profiling/memory-profile.js
 | Day | Focus | Deliverables |
 |-----|-------|--------------|
 | **Day 1** | Benchmarking Suite | Framework + physics benchmarks |
-| **Day 2** | More Benchmarks | Rendering + memory benchmarks |
-| **Day 3** | Input Buffer | InputBuffer module + tests |
-| **Day 4** | Edge Cases | Collision, input, boundary tests |
+| **Day 2** | Input Buffer + Memory | InputBuffer + memory profiling |
+| **Day 3** | Edge Cases | Collision, input, boundary tests |
+| **Day 4** | Human Testing Prep | Test overlay, AI spectating |
 | **Day 5** | Stress Testing | Stress runner + tests |
-| **Day 6** | Bug Fixes | Fix issues from testing |
+| **Day 6** | Bug Fixes + Polish | Fix issues, optimize |
 | **Day 7** | Document + Commit | Reports, checkpoint push |
 
 ---
 
 ## 🔧 Technical Notes
 
-### Benchmark Pattern
+### AI Spectating Mode
 ```javascript
-import { BenchmarkRunner } from './benchmarks/benchmark-runner.js';
+// In main.js
+const GAME_MODES = {
+    SINGLE_PLAYER: 'single_player',  // Human vs 5 AI
+    SPECTATE: 'spectate'             // All AI, camera control
+};
 
-const runner = new BenchmarkRunner();
-
-runner.benchmark('SpatialHash.insert', () => {
-    hash.insert('entity', x, z);
-});
-
-runner.benchmark('Collision.trail', () => {
-    checkTrailCollision(player, segments);
-});
-
-const report = runner.generateReport();
+function setGameMode(mode) {
+    currentMode = mode;
+    if (mode === 'spectate') {
+        enableSpectatorCamera();
+    }
+}
 ```
 
-### Input Buffer Pattern
+### Simple Chat
 ```javascript
-import { InputBuffer } from './network/InputBuffer.js';
-
-const buffer = new InputBuffer({
-    maxBufferSize: 60,  // 1 second at 60 FPS
-    maxAge: 200       // 200ms
-});
-
-// Add input
-buffer.addInput(timestamp, { left: true, right: false });
-
-// Get inputs since sequence
-const inputs = buffer.getInputsSince(lastSequence);
-
-// Reconcile with server
-buffer.reconcile(serverSequence);
+// Local-only chat for testing
+const chatMessages = [];
+function addChatMessage(playerId, message) {
+    chatMessages.push({ playerId, message, timestamp: Date.now() });
+    // Display in UI
+}
 ```
 
-### Memory Profiling Pattern
+### Test Overlay
 ```javascript
-import { MemoryProfiler } from './profiling/memory-profile.js';
-
-const profiler = new MemoryProfiler();
-
-profiler.startTracking();
-// ... operations ...
-const report = profiler.stopTracking();
-
-console.log(`Allocated: ${report.allocated} bytes`);
-console.log(`GC runs: ${report.gcRuns}`);
+// Debug UI overlay
+class TestOverlay {
+    showFPS() {}
+    showEntityCount() {}
+    showMemoryUsage() {}
+    showPhysicsStats() {}
+    toggleDebug() {}
+}
 ```
+
+---
+
+## 🎮 Human Testing Plan Preview
+
+### Single Player Testing
+- 1 human vs 5 AI opponents
+- Test grinding mechanics
+- Test collision detection
+- Test rubber system feel
+- Test frame rate stability
+
+### Spectating Mode
+- Watch 6 AI bikes
+- Free camera control
+- Test AI behavior
+- Test performance with no human input
+
+### Testing Checklist
+- [ ] Controls responsive
+- [ ] Grinding feels accurate
+- [ ] Collisions detected correctly
+- [ ] Frame rate stable (60 FPS)
+- [ ] No visual glitches
+- [ ] AI behavior reasonable
+- [ ] UI displays correctly
 
 ---
 
@@ -279,13 +326,15 @@ console.log(`GC runs: ${report.gcRuns}`);
 - `docs/BENCHMARK_REPORT.md` - Performance baselines
 - `docs/MEMORY_PROFILE.md` - Memory usage analysis
 - `docs/STRESS_TEST_REPORT.md` - Stress test results
+- `docs/HUMAN_TESTING_PLAN.md` - Testing instructions
 
 ### Code
 - Input buffering system
 - Benchmark framework
 - Memory profiling tools
-- Edge case tests
-- Stress tests
+- Test overlay UI
+- AI spectating mode
+- Single player mode
 
 ### Metrics
 - Frame time histogram
@@ -296,30 +345,6 @@ console.log(`GC runs: ${report.gcRuns}`);
 
 ---
 
-## 🔍 Key Metrics to Track
-
-### Performance
-- Frame time (average, p95, p99)
-- Physics update time
-- Rendering time
-- Collision detection time
-- SpatialHash query time
-
-### Memory
-- Total heap size
-- Entity allocation rate
-- Trail memory usage
-- GC frequency
-- Memory growth over time
-
-### Network (for Week 7-8)
-- Input latency
-- Server round-trip time
-- Packet loss simulation
-- Lag compensation effectiveness
-
----
-
-**Last Updated:** March 17, 2026  
-**Status:** Pending  
+**Last Updated:** March 18, 2026  
+**Status:** In Progress  
 **Next Checkpoint:** End of Week 4 (March 24)

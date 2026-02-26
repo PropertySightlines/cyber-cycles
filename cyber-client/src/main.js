@@ -1,12 +1,18 @@
 /**
  * Cyber Cycles - Main Game Loop
- * 
+ *
  * Integrated with new physics modules:
  * - SpatialHash for O(log n) collision queries
  * - CollisionDetection for precise collision handling
  * - RubberSystem for wall grinding mechanics
  * - PlayerEntity/TrailEntity for component-based entities
- * 
+ *
+ * Features:
+ * - TestOverlay for debugging and testing
+ * - Debug key bindings (F1-F3)
+ * - AI spectating mode
+ * - Single player mode
+ *
  * @module main
  */
 
@@ -16,6 +22,9 @@ import { DbConnection } from "./module";
 // ============================================================================
 // Module Imports
 // ============================================================================
+
+// UI modules
+import { TestOverlay } from './ui/TestOverlay.js';
 
 // Core modules
 import { SpatialHash } from './core/SpatialHash.js';
@@ -79,6 +88,27 @@ const state = {
 };
 
 /**
+ * Debug and test state
+ */
+const debugState = {
+    overlay: null,              // TestOverlay instance
+    isPaused: false,            // Game paused state
+    isStepping: false,          // Step one frame flag
+    gameSpeed: 1.0,             // Game speed multiplier
+    spectateMode: false,        // AI spectating mode
+    spectateTarget: null,       // Current spectate target player ID
+    singlePlayerMode: false,    // Single player mode (no network)
+    aiCount: 0,                 // Number of AI bots
+    frameCount: 0,              // Total frames rendered
+    physicsUpdates: 0,          // Physics update count
+    collisionChecks: 0,         // Collision check count
+    rubberUpdates: 0,           // Rubber system updates
+    networkInputs: 0,           // Network inputs sent
+    networkAcks: 0,             // Network acknowledgments
+    networkLatency: 0           // Network latency in ms
+};
+
+/**
  * Spatial hash for efficient collision queries
  * Cell size optimized for trail segment queries
  */
@@ -123,6 +153,86 @@ let lastTurnState = { left: false, right: false };
  * Admin identity for admin panel access
  */
 const ADMIN_IDENTITY = "c2007484dedccf3d247b44dc4ebafeee388121889dffea0ceedfd63b888106c1";
+
+// ============================================================================
+// TestOverlay Initialization
+// ============================================================================
+
+/**
+ * Initialize the TestOverlay debug UI
+ */
+function initTestOverlay() {
+    debugState.overlay = new TestOverlay({ position: 'top-left', visible: true });
+
+    // Register command callbacks for game control
+    debugState.overlay.registerCommandCallback('pause', () => {
+        debugState.isPaused = true;
+        debugState.overlay.log('Game paused - press F2 to step, F3 to resume', 'warn');
+    });
+
+    debugState.overlay.registerCommandCallback('resume', () => {
+        debugState.isPaused = false;
+        debugState.isStepping = false;
+        debugState.overlay.log('Game resumed', 'success');
+    });
+
+    debugState.overlay.registerCommandCallback('step', () => {
+        if (debugState.isPaused) {
+            debugState.isStepping = true;
+            debugState.overlay.log('Stepping one frame...', 'info');
+        } else {
+            debugState.overlay.log('Pause first (pause command)', 'warn');
+        }
+    });
+
+    debugState.overlay.registerCommandCallback('reset', () => {
+        debugState.overlay.log('Resetting game state...', 'warn');
+        // Reset game state
+        Object.keys(state.players).forEach(id => {
+            removePlayerEntity(id);
+        });
+        state.countdown = 3;
+        state.roundActive = false;
+        debugState.isPaused = false;
+        debugState.isStepping = false;
+        debugState.overlay.log('Game state reset', 'success');
+    });
+
+    debugState.overlay.registerCommandCallback('spectate', () => {
+        debugState.spectateMode = !debugState.spectateMode;
+        if (debugState.spectateMode) {
+            debugState.overlay.log('Spectate mode enabled - watching AI players', 'info');
+            // Find first AI player to spectate
+            const aiPlayer = Object.values(state.players).find(p => p.network.isAi);
+            if (aiPlayer) {
+                debugState.spectateTarget = aiPlayer.id;
+                debugState.overlay.log(`Spectating: ${aiPlayer.id}`, 'info');
+            }
+        } else {
+            debugState.spectateTarget = null;
+            debugState.overlay.log('Spectate mode disabled', 'info');
+        }
+        return debugState.spectateMode;
+    });
+
+    debugState.overlay.registerCommandCallback('ai', (count) => {
+        debugState.aiCount = count;
+        debugState.overlay.log(`AI count set to ${count}`, 'success');
+        // In single player mode, spawn AI bots
+        if (debugState.singlePlayerMode && conn && conn.reducers.spawnAI) {
+            for (let i = 0; i < count; i++) {
+                conn.reducers.spawnAI();
+            }
+        }
+    });
+
+    debugState.overlay.registerCommandCallback('speed', (value) => {
+        debugState.gameSpeed = Math.max(0.1, Math.min(5.0, value));
+        debugState.overlay.log(`Game speed set to ${debugState.gameSpeed}x`, 'success');
+    });
+
+    debugState.overlay.log('TestOverlay initialized - Press F1 to toggle', 'success');
+}
 
 // ============================================================================
 // SpacetimeDB Connection
@@ -465,14 +575,91 @@ function requestRespawn() {
 // ============================================================================
 
 /**
- * Handle keyboard input
+ * Handle keyboard input including debug keys
  */
 function setupInputHandlers() {
     window.addEventListener('keydown', (e) => {
+        // Debug key bindings
+        if (e.key === 'F1') {
+            e.preventDefault();
+            if (debugState.overlay) {
+                debugState.overlay.toggle();
+                debugState.overlay.log(`Overlay ${debugState.overlay.isVisible() ? 'shown' : 'hidden'}`, 'info');
+            }
+            return;
+        }
+
+        if (e.key === 'F2') {
+            e.preventDefault();
+            if (debugState.overlay) {
+                debugState.overlay.executeCommand('step');
+            }
+            return;
+        }
+
+        if (e.key === 'F3') {
+            e.preventDefault();
+            if (debugState.overlay) {
+                debugState.overlay.executeCommand('resume');
+            }
+            return;
+        }
+
+        if (e.key === 'F4') {
+            e.preventDefault();
+            if (debugState.overlay) {
+                debugState.overlay.toggleLog();
+            }
+            return;
+        }
+
+        if (e.key === 'F5') {
+            e.preventDefault();
+            if (debugState.overlay) {
+                debugState.overlay.executeCommand('reset');
+            }
+            return;
+        }
+
+        // Toggle spectate mode with F6
+        if (e.key === 'F6') {
+            e.preventDefault();
+            if (debugState.overlay) {
+                debugState.overlay.executeCommand('spectate');
+            }
+            return;
+        }
+
+        // Toggle single player mode with F7
+        if (e.key === 'F7') {
+            e.preventDefault();
+            debugState.singlePlayerMode = !debugState.singlePlayerMode;
+            if (debugState.overlay) {
+                debugState.overlay.log(`Single player mode: ${debugState.singlePlayerMode ? 'ON' : 'OFF'}`, 'warn');
+            }
+            return;
+        }
+
+        // Console command input with backtick
+        if (e.key === '`' || e.key === '~') {
+            e.preventDefault();
+            if (debugState.overlay) {
+                debugState.overlay.showLog();
+                debugState.overlay.showCommandHelp();
+            }
+            return;
+        }
+
         // Join race on first input
         if (!myPlayerId && (e.key.startsWith('Arrow') || ['a','d','s','A','D','S'].includes(e.key))) {
-            conn.reducers.join();
-            updateStatus("Joining race...");
+            if (!debugState.singlePlayerMode && conn && conn.reducers.join) {
+                conn.reducers.join();
+                updateStatus("Joining race...");
+            } else {
+                // Single player mode - create local player
+                createSinglePlayer();
+                updateStatus("Single player mode - Press arrows to move");
+            }
             return;
         }
 
@@ -481,7 +668,12 @@ function setupInputHandlers() {
 
         // Auto-respawn if dead
         if (!entity.state.alive) {
-            requestRespawn();
+            if (!debugState.singlePlayerMode && conn && conn.reducers.respawn) {
+                requestRespawn();
+            } else {
+                // Single player respawn
+                respawnSinglePlayer();
+            }
             return;
         }
 
@@ -517,13 +709,66 @@ function setupInputHandlers() {
         }
 
         // Send sync on turn state change
-        if (entity && state.roundActive && 
+        if (entity && state.roundActive &&
             (state.turnLeft !== lastTurnState.left || state.turnRight !== lastTurnState.right)) {
             lastTurnState.left = state.turnLeft;
             lastTurnState.right = state.turnRight;
             sendStateSync(entity);
         }
     });
+}
+
+/**
+ * Create a single player for local testing
+ */
+function createSinglePlayer() {
+    const playerId = 'local_player_' + Date.now();
+    const playerData = {
+        id: playerId,
+        x: 0,
+        z: 0,
+        color: 0x00ffff,
+        speed: localConfig.baseSpeed,
+        dir_x: 0,
+        dir_z: -1,
+        owner_id: null,
+        is_ai: false,
+        alive: true,
+        turn_points_json: '[]'
+    };
+    createPlayerEntity(playerData);
+    myPlayerId = playerId;
+    myPlayerEntity = state.players[myPlayerId];
+    myTrailEntity = state.trails[myPlayerId];
+    myRubberState = state.rubberStates[myPlayerId];
+
+    if (debugState.overlay) {
+        debugState.overlay.log(`Created local player: ${playerId}`, 'success');
+    }
+}
+
+/**
+ * Respawn single player after death
+ */
+function respawnSinglePlayer() {
+    if (myPlayerEntity) {
+        myPlayerEntity.state.setAlive(true);
+        myPlayerEntity.setPosition(0, 0);
+        myPlayerEntity.setDirection(0, -1);
+        myPlayerEntity.physics.setSpeed(localConfig.baseSpeed);
+        myPlayerEntity.turnPoints = [];
+
+        if (myTrailEntity) {
+            myTrailEntity.clear();
+        }
+
+        hideDeathScreen();
+        updateStatus("Respawned!");
+
+        if (debugState.overlay) {
+            debugState.overlay.log('Player respawned', 'success');
+        }
+    }
 }
 
 // ============================================================================
@@ -788,61 +1033,65 @@ function updateSlipstream(dt, allSegments) {
 /**
  * Check collisions for all players
  * @param {Array} allSegments - All trail segments
+ * @param {number} dt - Delta time
  */
-function checkCollisions(allSegments) {
+function checkCollisions(allSegments, dt = 0.016) {
     const players = Object.values(state.players);
-    
+
     players.forEach(entity => {
         if (!entity || !entity.state.alive || !state.roundActive) return;
-        
+
         const pos = entity.getPosition();
-        
+
+        // Increment collision check counter
+        debugState.collisionChecks++;
+
         // Trail collision using new CollisionDetection module
         const trailCollision = checkTrailCollision(
             { id: entity.id, x: pos.x, z: pos.z, alive: true },
             allSegments,
             COLLISION_CONFIG.deathRadius
         );
-        
+
         if (trailCollision) {
             entity.takeDamage();
             console.log("Player", entity.id, "hit trail of", trailCollision.segment.pid);
-            
+
             if (entity.id === myPlayerId) {
                 sendStateSync(entity);
                 showDeathScreen();
             }
         }
-        
+
         // Bike-to-bike collision
         players.forEach(other => {
             if (!other || !other.state.alive || other.id === entity.id) return;
-            
+
             const otherPos = other.getPosition();
             const dist = Math.hypot(pos.x - otherPos.x, pos.z - otherPos.z);
-            
+
             if (dist < CONSTANTS.BIKE_COLLISION_DIST) {
                 entity.takeDamage();
                 other.takeDamage();
-                
+
                 if (entity.id === myPlayerId) {
                     sendStateSync(entity);
                     showDeathScreen();
                 }
             }
         });
-        
+
         // Arena bounds check
         const boundsResult = checkArenaBounds(pos.x, pos.z, CONSTANTS.ARENA_SIZE / 2);
         if (!boundsResult.inside) {
             entity.takeDamage();
-            
+
             if (entity.id === myPlayerId) {
                 sendStateSync(entity);
                 showDeathScreen();
             }
         }
-        
+
         // Rubber-based collision response (optional enhancement)
         const rubberState = state.rubberStates[entity.id];
         if (rubberState && entity.state.alive) {
@@ -851,11 +1100,12 @@ function checkCollisions(allSegments) {
                 allSegments,
                 RUBBER_CONFIG.detectionRadius
             );
-            
+
             if (wallInfo) {
                 // Update rubber state
                 updateRubber(rubberState, dt, RUBBER_CONFIG, true);
-                
+                debugState.rubberUpdates++;
+
                 // Apply malus if turning while grinding
                 if (entity.physics.isTurningLeft || entity.physics.isTurningRight) {
                     applyMalus(rubberState, RUBBER_CONFIG.malusDuration, RUBBER_CONFIG.malusFactor);
@@ -938,24 +1188,28 @@ function updateAI(allSegments) {
  * @param {number} dt - Delta time
  */
 function updateGameState(dt) {
+    // Increment physics update counter
+    debugState.physicsUpdates++;
+
     // Collect all trail segments
     const allSegments = collectTrailSegments();
-    
+
     // Update all players
     updatePlayers(dt, allSegments);
-    
+
     // Check slipstream/boost
     updateSlipstream(dt, allSegments);
-    
+
     // Check collisions
-    checkCollisions(allSegments);
-    
+    checkCollisions(allSegments, dt);
+
     // Update AI
     updateAI(allSegments);
-    
+
     // Sync local player state
     if (myPlayerEntity && state.roundActive) {
         sendStateSync(myPlayerEntity);
+        debugState.networkInputs++;
     }
 }
 
@@ -1287,24 +1541,142 @@ window.addEventListener('resize', () => {
 let lastTime = performance.now();
 
 /**
+ * Update TestOverlay statistics
+ */
+function updateOverlayStats() {
+    if (!debugState.overlay || !debugState.overlay.isVisible()) return;
+
+    // Calculate FPS
+    const fps = debugState.frameCount > 0 ? 
+        (debugState.frameCount / ((performance.now() - lastTime) / 1000)) : 0;
+    const frameTime = 1000 / (fps || 60);
+
+    // Count entities by type
+    const playerCount = Object.keys(state.players).length;
+    const trailCount = Object.keys(state.trails).length;
+    const aiCount = Object.values(state.players).filter(p => p.network.isAi).length;
+
+    // Get memory usage (if available)
+    let memoryUsed = 0;
+    let memoryTotal = 0;
+    if (performance.memory) {
+        memoryUsed = performance.memory.usedJSHeapSize / (1024 * 1024);
+        memoryTotal = performance.memory.jsHeapSizeLimit / (1024 * 1024);
+    } else {
+        memoryUsed = 50; // Fallback estimate
+        memoryTotal = 512;
+    }
+
+    // Update overlay displays
+    debugState.overlay.showFPS(fps, frameTime);
+    debugState.overlay.showEntityCount(playerCount, {
+        players: playerCount,
+        trails: trailCount,
+        ai: aiCount
+    });
+    debugState.overlay.showMemoryUsage(memoryUsed, memoryTotal);
+    debugState.overlay.showPhysicsStats(
+        debugState.physicsUpdates,
+        debugState.collisionChecks,
+        debugState.rubberUpdates
+    );
+    debugState.overlay.showNetworkStats(
+        debugState.networkInputs,
+        debugState.networkAcks,
+        debugState.networkLatency
+    );
+
+    // Update player stats
+    if (myPlayerEntity) {
+        const pos = myPlayerEntity.getPosition();
+        debugState.overlay.showPlayerStats(
+            myPlayerId,
+            pos,
+            myPlayerEntity.physics.speed,
+            myPlayerEntity.state.alive
+        );
+    } else {
+        debugState.overlay.showPlayerStats(null, { x: 0, z: 0 }, 0, false);
+    }
+
+    // Render overlay
+    debugState.overlay.render();
+
+    // Reset frame counters
+    debugState.frameCount = 0;
+    debugState.physicsUpdates = 0;
+    debugState.collisionChecks = 0;
+    debugState.rubberUpdates = 0;
+}
+
+/**
+ * Update spectate camera target
+ */
+function updateSpectateCamera() {
+    if (!debugState.spectateMode || !debugState.spectateTarget) return;
+
+    const target = state.players[debugState.spectateTarget];
+    if (target && target.state.alive) {
+        const pos = target.getPosition();
+        const dir = target.getDirection();
+        camera.position.set(pos.x, 30, pos.z + 100);
+        camera.lookAt(pos.x, 1, pos.z);
+    } else {
+        // Find next AI to spectate
+        const aiPlayer = Object.values(state.players).find(p => p.network.isAi && p.state.alive);
+        if (aiPlayer) {
+            debugState.spectateTarget = aiPlayer.id;
+        }
+    }
+}
+
+/**
  * Main animation loop
  */
 function animate() {
     requestAnimationFrame(animate);
-    
+
     const now = performance.now();
-    const dt = Math.min((now - lastTime) / 1000, 0.1);
+    let dt = Math.min((now - lastTime) / 1000, 0.1);
     lastTime = now;
+
+    // Apply game speed multiplier
+    dt *= debugState.gameSpeed;
+
+    // Increment frame count for stats
+    debugState.frameCount++;
+
+    // Handle pause state
+    if (debugState.isPaused && !debugState.isStepping) {
+        // Still render and update overlay when paused
+        updateOverlayStats();
+        renderGameState();
+        renderer.render(scene, camera);
+        return;
+    }
+
+    // Reset step flag after processing
+    if (debugState.isStepping) {
+        debugState.isStepping = false;
+    }
 
     // Update game state
     updateGameState(dt);
-    
+
     // Update particles
     updateParticles(dt);
-    
+
+    // Update spectate camera if in spectate mode
+    if (debugState.spectateMode) {
+        updateSpectateCamera();
+    }
+
     // Render
     renderGameState();
-    
+
+    // Update overlay stats
+    updateOverlayStats();
+
     renderer.render(scene, camera);
 }
 
@@ -1317,27 +1689,32 @@ function animate() {
  */
 function init() {
     console.log("Cyber Cycles - Initializing with new physics modules");
-    
+
+    // Initialize TestOverlay debug UI
+    initTestOverlay();
+
     // Initialize SpacetimeDB connection
     initSpacetimeDB();
-    
+
     // Setup input handlers
     setupInputHandlers();
-    
+
     // Setup UI controls
     setupUIControls();
-    
+
     // Start animation loop
     animate();
-    
+
     // Emit initialization event
     eventSystem.emit('game:init', {
         spatialHash,
         eventSystem,
-        config: localConfig
+        config: localConfig,
+        debugState
     });
-    
+
     console.log("Cyber Cycles - Initialization complete");
+    console.log("Debug Controls: F1=Toggle Overlay, F2=Step, F3=Resume, F4=Toggle Log, F5=Reset, F6=Spectate, F7=Single Player");
 }
 
 // Start the game
