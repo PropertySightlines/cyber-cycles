@@ -174,6 +174,7 @@ export class TestOverlay {
             '  spectate       - Toggle spectate mode',
             '  ai [count]     - Set AI count (default: 5)',
             '  speed [value]  - Set game speed multiplier (default: 1.0)',
+            '  tron [on/off]  - Toggle Tron-style 90° turns (default: smooth)',
             '  clear          - Clear console log',
             '  help           - Show this help',
             '  stats          - Show current stats',
@@ -193,7 +194,7 @@ export class TestOverlay {
         this.registerCommand('step', () => { if (this.onStep) this.onStep(); return 'Stepped one frame'; });
         this.registerCommand('reset', () => { if (this.onReset) this.onReset(); return 'Game reset'; });
         this.registerCommand('spectate', () => { if (this.onSpectate) this.onSpectate(); return 'Spectate mode toggled'; });
-        this.registerCommand('ai', (args) => { 
+        this.registerCommand('ai', (args) => {
             const count = parseInt(args[0]) || 5;
             if (this.onSetAI) this.onSetAI(count);
             return `AI count set to ${count}`;
@@ -215,6 +216,21 @@ export class TestOverlay {
         });
         this.registerCommand('pos', () => {
             return this.elements.player ? this.elements.player.textContent : 'No player data';
+        });
+        this.registerCommand('tron', (args) => {
+            if (this.onToggleTron) {
+                const enabled = args[0]?.toLowerCase() === 'on' || args[0]?.toLowerCase() === 'true' || args[0] === '1';
+                const disabled = args[0]?.toLowerCase() === 'off' || args[0]?.toLowerCase() === 'false' || args[0] === '0';
+                if (enabled || disabled) {
+                    this.onToggleTron(enabled);
+                    return `Tron-style turning ${enabled ? 'ENABLED' : 'DISABLED'}`;
+                } else {
+                    // Toggle current state
+                    this.onToggleTron();
+                    return 'Tron-style turning toggled';
+                }
+            }
+            return 'Tron command not configured';
         });
     }
     
@@ -438,6 +454,7 @@ export class TestOverlay {
     onSpectate = null;
     onSetAI = null;
     onSetSpeed = null;
+    onToggleTron = null;
 }
 
 export default TestOverlay;

@@ -225,6 +225,22 @@ function initTestOverlay() {
         debugState.overlay.log(`Game speed set to ${debugState.gameSpeed}x`, 'success');
     };
 
+    debugState.overlay.onToggleTron = (enabled) => {
+        // If enabled is undefined, toggle current state
+        if (enabled === undefined) {
+            enabled = !PHYSICS_CONFIG.tronStyleTurning;
+        }
+        // Update config
+        PHYSICS_CONFIG.tronStyleTurning = enabled;
+        // Apply to all player entities
+        Object.values(state.players).forEach(entity => {
+            if (entity && entity.setTronStyleTurning) {
+                entity.setTronStyleTurning(enabled);
+            }
+        });
+        debugState.overlay.log(`Tron-style turning ${enabled ? 'ENABLED' : 'DISABLED'} - 90° instant turns`, enabled ? 'success' : 'info');
+    };
+
     debugState.overlay.log('Debug overlay ready - Press ` (backtick) to toggle', 'success');
 }
 
@@ -343,7 +359,7 @@ function initSpacetimeDB() {
  */
 function createPlayerEntity(p) {
     const playerId = p.id;
-    
+
     // Create PlayerEntity
     const playerEntity = new PlayerEntity(playerId, p.x, p.z, {
         color: p.color || 0xffffff,
@@ -354,6 +370,9 @@ function createPlayerEntity(p) {
         isAi: p.is_ai || false,
         maxTrailLength: localConfig.maxTrailLength
     });
+
+    // Apply Tron-style turning setting from config
+    playerEntity.setTronStyleTurning(PHYSICS_CONFIG.tronStyleTurning);
 
     // Create TrailEntity
     const trailEntity = new TrailEntity(playerId, {
@@ -371,7 +390,7 @@ function createPlayerEntity(p) {
         try {
             const turnPoints = JSON.parse(p.turn_points_json || p.turnPointsJson || "[]");
             playerEntity.turnPoints = turnPoints;
-            
+
             // Add points to trail entity
             turnPoints.forEach(pt => {
                 trailEntity.addPoint(pt.x, pt.z);
@@ -1516,7 +1535,7 @@ function renderGameState() {
             renderCache[entity.id] = createRenderObjects(entity);
             console.log("Created render cache for:", entity.id);
         }
-        
+
         const { bikeGroup, trail, glowSprite } = renderCache[entity.id];
 
         // Update local player camera
@@ -1527,15 +1546,29 @@ function renderGameState() {
             camera.lookAt(pos.x, 1, pos.z);
         }
 
-        // Update visibility based on alive state
+        // Update visibility - bike hidden when dead, but trail remains as ghost trail
         bikeGroup.visible = entity.state.alive;
-        trail.visible = entity.state.alive;
-        
+        trail.visible = true; // Always show trail (including ghost trails for dead players)
+
+        // Update trail mesh from TrailEntity (even for dead players - ghost trails)
+        const trailEntity = state.trails[entity.id];
+        if (trailEntity) {
+            updateTrailMesh(trailEntity, trail);
+        }
+
+        // Style ghost trails differently (semi-transparent)
+        if (!entity.state.alive) {
+            trail.material.opacity = 0.3; // Ghost trail - more transparent
+            trail.material.depthWrite = false;
+        } else {
+            trail.material.opacity = 0.7; // Normal trail
+        }
+
         if (!entity.state.alive) return;
 
         const pos = entity.getPosition();
         const dir = entity.getDirection();
-        
+
         // Update bike position and rotation
         bikeGroup.position.set(pos.x, 0, pos.z);
         bikeGroup.rotation.y = Math.atan2(dir.x, dir.z);
@@ -1544,12 +1577,6 @@ function renderGameState() {
         const isBoosting = state.isBoosting && entity.id === myPlayerId;
         glowSprite.material.opacity = isBoosting ? 0.7 : 0.4;
         glowSprite.scale.set(isBoosting ? 18 : 12, isBoosting ? 18 : 12, 1);
-
-        // Update trail mesh from TrailEntity
-        const trailEntity = state.trails[entity.id];
-        if (trailEntity) {
-            updateTrailMesh(trailEntity, trail);
-        }
     });
 }
 

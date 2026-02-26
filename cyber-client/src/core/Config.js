@@ -64,7 +64,16 @@ export const PHYSICS_CONFIG = Object.freeze({
     sleepThreshold: 0.01,
 
     /** Gravity (not used in top-down, but available) */
-    gravity: 0.0
+    gravity: 0.0,
+
+    /** Enable Tron-style 90° instant turns (default: false for smooth turning) */
+    tronStyleTurning: false,
+
+    /** Cooldown between 90° turns in seconds (prevents spinning) */
+    turnCooldown: 0.15,
+
+    /** Turn angle for instant turns in radians (PI/2 = 90°) */
+    turnAngle: Math.PI / 2
 });
 
 // ============================================================================

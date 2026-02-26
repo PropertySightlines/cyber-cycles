@@ -94,6 +94,21 @@ export class PhysicsComponent {
 
         /** @type {number} Turn speed (radians/second) */
         this.turnSpeed = options.turnSpeed || PHYSICS_CONFIG.turnSpeed;
+
+        /** @type {number} Last turn timestamp for cooldown */
+        this.lastTurnTime = 0;
+
+        /** @type {boolean} Enable Tron-style 90° instant turns */
+        this.tronStyleTurning = PHYSICS_CONFIG.tronStyleTurning;
+
+        /** @type {boolean} Pending left turn (for Tron-style) */
+        this.pendingLeftTurn = false;
+
+        /** @type {boolean} Pending right turn (for Tron-style) */
+        this.pendingRightTurn = false;
+
+        /** @type {boolean} Pending U-turn (for Tron-style) */
+        this.pendingUTurn = false;
     }
 
     /**
@@ -184,22 +199,27 @@ export class PhysicsComponent {
      * @param {number} dt - Delta time
      */
     update(dt) {
-        // Apply turning rotation when flags are set
-        if (this.isTurningLeft || this.isTurningRight) {
-            const turnAmount = this.turnSpeed * dt;
-            const turnDir = this.isTurningLeft ? -1 : 1;
-            const angle = turnDir * turnAmount;
-            
-            // Rotate direction vector using 2D rotation matrix
-            const cos = Math.cos(angle);
-            const sin = Math.sin(angle);
-            const newDirX = this.directionX * cos + this.directionZ * sin;
-            const newDirZ = -this.directionX * sin + this.directionZ * cos;
-            
-            this.directionX = newDirX;
-            this.directionZ = newDirZ;
+        // Handle Tron-style instant 90° turns
+        if (this.tronStyleTurning) {
+            this._updateTronStyleTurns(dt);
+        } else {
+            // Original smooth turning
+            if (this.isTurningLeft || this.isTurningRight) {
+                const turnAmount = this.turnSpeed * dt;
+                const turnDir = this.isTurningLeft ? -1 : 1;
+                const angle = turnDir * turnAmount;
+
+                // Rotate direction vector using 2D rotation matrix
+                const cos = Math.cos(angle);
+                const sin = Math.sin(angle);
+                const newDirX = this.directionX * cos + this.directionZ * sin;
+                const newDirZ = -this.directionX * sin + this.directionZ * cos;
+
+                this.directionX = newDirX;
+                this.directionZ = newDirZ;
+            }
         }
-        
+
         // Apply velocity based on direction and speed
         const vx = this.directionX * this.speed;
         const vz = this.directionZ * this.speed;
@@ -207,6 +227,122 @@ export class PhysicsComponent {
 
         // Integrate Verlet point
         integrate(this.point, dt, PHYSICS_CONFIG.damping);
+    }
+
+    /**
+     * Update Tron-style instant 90° turns
+     * @param {number} dt - Delta time
+     * @private
+     */
+    _updateTronStyleTurns(dt) {
+        const currentTime = Date.now();
+        const cooldownMs = PHYSICS_CONFIG.turnCooldown * 1000;
+
+        // Check if cooldown has expired
+        const canTurn = (currentTime - this.lastTurnTime) >= cooldownMs;
+
+        // Handle U-turn (both directions pressed or explicit U-turn flag)
+        if ((this.isTurningLeft && this.isTurningRight) || this.pendingUTurn) {
+            if (canTurn) {
+                this._performUTurn();
+                this.lastTurnTime = currentTime;
+            }
+            this.pendingUTurn = false;
+            return;
+        }
+
+        // Handle left turn
+        if (this.isTurningLeft && !this.isTurningRight) {
+            if (canTurn && !this.pendingLeftTurn) {
+                this.pendingLeftTurn = true;
+                this._perform90DegreeTurn(-1); // -1 for left
+                this.lastTurnTime = currentTime;
+            }
+        } else {
+            this.pendingLeftTurn = false;
+        }
+
+        // Handle right turn
+        if (this.isTurningRight && !this.isTurningLeft) {
+            if (canTurn && !this.pendingRightTurn) {
+                this.pendingRightTurn = true;
+                this._perform90DegreeTurn(1); // 1 for right
+                this.lastTurnTime = currentTime;
+            }
+        } else {
+            this.pendingRightTurn = false;
+        }
+    }
+
+    /**
+     * Perform instant 90° turn
+     * @param {number} direction - -1 for left, 1 for right
+     * @private
+     */
+    _perform90DegreeTurn(direction) {
+        const currentDirX = this.directionX;
+        const currentDirZ = this.directionZ;
+
+        if (direction < 0) {
+            // 90° left turn: (-dirZ, dirX)
+            this.directionX = -currentDirZ;
+            this.directionZ = currentDirX;
+        } else {
+            // 90° right turn: (dirZ, -dirX)
+            this.directionX = currentDirZ;
+            this.directionZ = -currentDirX;
+        }
+
+        // Normalize to ensure unit vector
+        const len = Math.sqrt(this.directionX * this.directionX + this.directionZ * this.directionZ);
+        if (len > 0.0001) {
+            this.directionX /= len;
+            this.directionZ /= len;
+        }
+    }
+
+    /**
+     * Perform 180° U-turn
+     * @private
+     */
+    _performUTurn() {
+        // 180° U-turn: (-dirX, -dirZ)
+        this.directionX = -this.directionX;
+        this.directionZ = -this.directionZ;
+    }
+
+    /**
+     * Set Tron-style turning mode
+     * @param {boolean} enabled - Enable Tron-style turning
+     */
+    setTronStyleTurning(enabled) {
+        this.tronStyleTurning = enabled;
+    }
+
+    /**
+     * Check if Tron-style turning is enabled
+     * @returns {boolean}
+     */
+    isTronStyleTurning() {
+        return this.tronStyleTurning;
+    }
+
+    /**
+     * Get time since last turn in seconds
+     * @returns {number}
+     */
+    getTimeSinceLastTurn() {
+        return (Date.now() - this.lastTurnTime) / 1000;
+    }
+
+    /**
+     * Check if turn is on cooldown
+     * @returns {boolean}
+     */
+    isTurnOnCooldown() {
+        const currentTime = Date.now();
+        const cooldownMs = PHYSICS_CONFIG.turnCooldown * 1000;
+        return (currentTime - this.lastTurnTime) < cooldownMs;
     }
 
     /**
@@ -223,7 +359,9 @@ export class PhysicsComponent {
             isBoosting: this.isBoosting,
             isBraking: this.isBraking,
             isTurningLeft: this.isTurningLeft,
-            isTurningRight: this.isTurningRight
+            isTurningRight: this.isTurningRight,
+            tronStyleTurning: this.tronStyleTurning,
+            lastTurnTime: this.lastTurnTime
         };
     }
 
@@ -241,6 +379,8 @@ export class PhysicsComponent {
         if (data.isBraking !== undefined) this.isBraking = data.isBraking;
         if (data.isTurningLeft !== undefined) this.isTurningLeft = data.isTurningLeft;
         if (data.isTurningRight !== undefined) this.isTurningRight = data.isTurningRight;
+        if (data.tronStyleTurning !== undefined) this.tronStyleTurning = data.tronStyleTurning;
+        if (data.lastTurnTime !== undefined) this.lastTurnTime = data.lastTurnTime;
     }
 }
 
@@ -1526,6 +1666,38 @@ export class PlayerEntity {
      */
     setColor(color) {
         this.render.setColor(color);
+    }
+
+    /**
+     * Set Tron-style turning mode for this player
+     * @param {boolean} enabled - Enable Tron-style turning
+     */
+    setTronStyleTurning(enabled) {
+        this.physics.setTronStyleTurning(enabled);
+    }
+
+    /**
+     * Check if Tron-style turning is enabled
+     * @returns {boolean}
+     */
+    isTronStyleTurning() {
+        return this.physics.isTronStyleTurning();
+    }
+
+    /**
+     * Get time since last turn in seconds
+     * @returns {number}
+     */
+    getTimeSinceLastTurn() {
+        return this.physics.getTimeSinceLastTurn();
+    }
+
+    /**
+     * Check if turn is on cooldown
+     * @returns {boolean}
+     */
+    isTurnOnCooldown() {
+        return this.physics.isTurnOnCooldown();
     }
 }
 
