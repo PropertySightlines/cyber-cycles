@@ -74,7 +74,7 @@ export const PHYSICS_CONFIG = {
     turnCooldown: 0.15,
 
     /** Turn angle for instant turns in radians (PI/2 = 90°) */
-    turnAngle: Math.PI / 2
+    turnAngle: Math.PI / 2,
 });
 
 // ============================================================================
