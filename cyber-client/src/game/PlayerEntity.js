@@ -184,6 +184,22 @@ export class PhysicsComponent {
      * @param {number} dt - Delta time
      */
     update(dt) {
+        // Apply turning rotation when flags are set
+        if (this.isTurningLeft || this.isTurningRight) {
+            const turnAmount = this.turnSpeed * dt;
+            const turnDir = this.isTurningLeft ? -1 : 1;
+            const angle = turnDir * turnAmount;
+            
+            // Rotate direction vector using 2D rotation matrix
+            const cos = Math.cos(angle);
+            const sin = Math.sin(angle);
+            const newDirX = this.directionX * cos + this.directionZ * sin;
+            const newDirZ = -this.directionX * sin + this.directionZ * cos;
+            
+            this.directionX = newDirX;
+            this.directionZ = newDirZ;
+        }
+        
         // Apply velocity based on direction and speed
         const vx = this.directionX * this.speed;
         const vz = this.directionZ * this.speed;
