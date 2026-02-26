@@ -253,7 +253,7 @@ function initSpacetimeDB() {
                 if (adminPanel) adminPanel.style.display = 'block';
             }
 
-            updateStatus("✅ Connected! Press any arrow key to join the race!");
+            updateStatus("✅ Connected! Press ← → arrow keys to join the race!");
 
             // Subscribe to tables
             conn.subscriptionBuilder()
@@ -485,6 +485,8 @@ function handleGameState(gs) {
             countdownEl.style.display = 'block';
             countdownEl.innerText = state.countdown;
             countdownEl.style.color = state.countdown === 1 ? '#ff0000' : '#ffff00';
+            // Show "Round starting..." message during countdown
+            updateStatus(`Round starting... ${state.countdown}`);
         } else {
             countdownEl.style.display = 'none';
         }
@@ -497,7 +499,7 @@ function handleGameState(gs) {
             updateStatus("🏆 VICTORY! 🏆");
         } else if (state.players[myPlayerId] && !state.players[myPlayerId].state.alive) {
             showDeathScreen();
-            updateStatus("Eliminated!");
+            updateStatus("Eliminated! Press SPACE to respawn");
         }
     }
 
@@ -514,11 +516,19 @@ function handleGameState(gs) {
                 entity.render.clearTrail();
             }
         });
-        
+
         // Clear spatial hash for new round
         spatialHash.clear();
-        
+
         console.log("ROUND STARTED - Players:", Object.keys(state.players).length);
+    }
+
+    // Show "Get ready!" when player has joined but round hasn't started
+    if (myPlayerId && !state.roundActive && state.countdown <= 0) {
+        const playerEntity = state.players[myPlayerId];
+        if (playerEntity && playerEntity.state.alive) {
+            updateStatus("Get ready! Race starting soon...");
+        }
     }
 }
 
@@ -596,6 +606,9 @@ function requestRespawn() {
  * Handle keyboard input including debug keys
  */
 function setupInputHandlers() {
+    // Track respawn cooldown to prevent constant respawning
+    let respawnCooldown = false;
+
     window.addEventListener('keydown', (e) => {
         // Debug key binding - backtick (`) toggles overlay (no browser conflicts)
         if (e.key === '`' || e.key === '~') {
@@ -607,14 +620,7 @@ function setupInputHandlers() {
             return;
         }
 
-        // Game controls take priority when overlay is hidden
-        if (!debugState.overlay || !debugState.overlay.isVisible()) {
-            // Game control keys are handled elsewhere
-            return;
-        }
-
-        // When overlay is visible, let it handle all input via its text field
-        // Additional debug keys (optional, work even when overlay hidden)
+        // Additional debug keys (work even when overlay hidden)
         if (e.key === 'F2') {
             e.preventDefault();
             if (debugState.overlay) {
@@ -639,6 +645,14 @@ function setupInputHandlers() {
             return;
         }
 
+        // When overlay is visible, let it handle all input via its text field
+        // Skip game controls when overlay is visible
+        if (debugState.overlay && debugState.overlay.isVisible()) {
+            return;
+        }
+
+        // GAME CONTROLS - Only processed when overlay is HIDDEN
+
         // Join race on first input
         if (!myPlayerId && (e.key.startsWith('Arrow') || ['a','d','s','A','D','S'].includes(e.key))) {
             if (!debugState.singlePlayerMode && conn && conn.reducers.join) {
@@ -655,13 +669,20 @@ function setupInputHandlers() {
         const entity = state.players[myPlayerId];
         if (!entity) return;
 
-        // Auto-respawn if dead
+        // Handle respawn when dead - with cooldown to prevent spam
         if (!entity.state.alive) {
-            if (!debugState.singlePlayerMode && conn && conn.reducers.respawn) {
-                requestRespawn();
-            } else {
-                // Single player respawn
-                respawnSinglePlayer();
+            // Only allow respawn via SPACE key (explicit action)
+            if (e.key === ' ' || e.code === 'Space') {
+                if (!respawnCooldown) {
+                    respawnCooldown = true;
+                    if (!debugState.singlePlayerMode && conn && conn.reducers.respawn) {
+                        requestRespawn();
+                    } else {
+                        respawnSinglePlayer();
+                    }
+                    // Reset cooldown after 1 second
+                    setTimeout(() => { respawnCooldown = false; }, 1000);
+                }
             }
             return;
         }
@@ -783,6 +804,8 @@ function showDeathScreen() {
     if (respawnBtn) respawnBtn.style.display = 'block';
     state.cameraShake = 0.5;
     createExplosion(state.players[myPlayerId], 0xff3333);
+    // Update status to show respawn prompt
+    updateStatus("Eliminated! Press SPACE to respawn");
 }
 
 /**
@@ -921,10 +944,10 @@ function collectTrailSegments() {
  */
 function updatePlayers(dt, allSegments) {
     const players = Object.values(state.players);
-    
+
     players.forEach(entity => {
         if (!entity || !entity.state.alive || !state.roundActive) return;
-        
+
         // Apply input for local player
         if (entity.id === myPlayerId) {
             entity.applyInput({
@@ -933,25 +956,29 @@ function updatePlayers(dt, allSegments) {
                 brake: state.brake,
                 boost: state.isBoosting
             });
+        } else if (entity.network.isAi) {
+            // AI players - their turning is handled by updateAI(), don't overwrite
+            // AI turning state is already set in entity.physics.isTurningLeft/isTurningRight
+            // by updateAI() function based on obstacle avoidance
         } else {
-            // AI or remote player - use stored turn state
-            entity.physics.isTurningLeft = entity.state.turning && state.turnLeft;
-            entity.physics.isTurningRight = entity.state.turning && state.turnRight;
+            // Remote human players - use network state from server
+            // For now, use the entity's stored turning state (updated via syncState)
+            // This will be updated when we receive network sync from server
         }
-        
+
         // Update physics
         entity.update(dt, allSegments);
-        
+
         // Update position in spatial hash
         const pos = entity.getPosition();
         spatialHash.update(entity.id, pos.x, pos.z);
-        
+
         // Add trail point based on distance traveled
         const trail = state.trails[entity.id];
         if (trail) {
             trail.addPoint(pos.x, pos.z);
         }
-        
+
         // Update turn points array for backward compatibility
         if (trail && trail.segments) {
             entity.turnPoints = [...trail.segments];
@@ -1113,29 +1140,35 @@ function checkCollisions(allSegments, dt = 0.016) {
  */
 function updateAI(allSegments) {
     const players = Object.values(state.players);
-    
+
     players.forEach(entity => {
         if (!entity || !entity.network.isAi || !entity.state.alive || !state.roundActive) return;
-        
+
         const pos = entity.getPosition();
         const dir = entity.getDirection();
-        
-        // Look ahead for obstacles
-        const lookX = pos.x + dir.x * 25;
-        const lookZ = pos.z + dir.z * 25;
-        let blocked = Math.abs(lookX) > 180 || Math.abs(lookZ) > 180;
-        
+
+        // Look ahead for obstacles (further ahead for better reaction time)
+        const lookAhead = 30;
+        const lookX = pos.x + dir.x * lookAhead;
+        const lookZ = pos.z + dir.z * lookAhead;
+
+        // Check arena bounds - turn toward center when approaching walls
+        const distToCenter = Math.hypot(pos.x, pos.z);
+        const approachingWall = Math.abs(lookX) > 160 || Math.abs(lookZ) > 160;
+
+        let blocked = approachingWall;
+
         if (!blocked) {
             // Check for trail obstacles using spatial hash
             const nearbyResults = spatialHash.queryRange(lookX, lookZ, 10);
-            
+
             allSegments.forEach(seg => {
                 if (seg.pid === entity.id) return;
-                if (distanceToSegment(lookX, lookZ, seg.x1, seg.z1, seg.x2, seg.z2) < 10) {
+                if (distanceToSegment(lookX, lookZ, seg.x1, seg.z1, seg.x2, seg.z2) < 12) {
                     blocked = true;
                 }
             });
-            
+
             // Check for bike obstacles
             players.forEach(other => {
                 if (!other || !other.state.alive || other.id === entity.id) return;
@@ -1144,31 +1177,38 @@ function updateAI(allSegments) {
                 if (dist < 15) blocked = true;
             });
         }
-        
+
         // AI steering logic
-        if (blocked) {
+        let needsTurn = false;
+        let turnLeft = false;
+        let turnRight = false;
+
+        if (blocked || approachingWall) {
+            // Calculate direction toward center
             const towardCenterX = -pos.x;
             const towardCenterZ = -pos.z;
-            const normalized = normalize(towardCenterX, towardCenterZ);
-            
+            const len = Math.hypot(towardCenterX, towardCenterZ);
+            const normalized = len > 0 ? { x: towardCenterX / len, z: towardCenterZ / len } : { x: 0, z: 0 };
+
+            // Cross product to determine which way to turn
             const cross = dir.x * normalized.z - dir.z * normalized.x;
-            
-            if (cross > 0.2) {
-                entity.physics.isTurningLeft = true;
-                entity.physics.isTurningRight = false;
-            } else if (cross < -0.2) {
-                entity.physics.isTurningLeft = false;
-                entity.physics.isTurningRight = true;
-            } else {
-                entity.physics.isTurningLeft = false;
-                entity.physics.isTurningRight = false;
+
+            // Lower threshold for more responsive turning
+            if (cross > 0.1) {
+                turnLeft = true;
+                needsTurn = true;
+            } else if (cross < -0.1) {
+                turnRight = true;
+                needsTurn = true;
             }
-            
-            sendStateSync(entity);
-        } else {
-            entity.physics.isTurningLeft = false;
-            entity.physics.isTurningRight = false;
         }
+
+        // Apply turning state
+        entity.physics.isTurningLeft = turnLeft;
+        entity.physics.isTurningRight = turnRight;
+
+        // Sync AI state to server
+        sendStateSync(entity);
     });
 }
 
