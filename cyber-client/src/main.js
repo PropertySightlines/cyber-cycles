@@ -1535,22 +1535,25 @@ let lastTime = performance.now();
 function updateOverlayStats() {
     if (!debugState.overlay || !debugState.overlay.isVisible()) return;
 
-    // Calculate FPS
-    const fps = debugState.frameCount > 0 ? 
+    // Calculate FPS with minimum threshold to prevent infinity
+    const rawFps = debugState.frameCount > 0 ?
         (debugState.frameCount / ((performance.now() - lastTime) / 1000)) : 0;
-    const frameTime = 1000 / (fps || 60);
+    // Clamp FPS to valid range [1, 1000] to prevent infinity and unrealistic values
+    const fps = Math.max(1, Math.min(1000, rawFps));
+    // Calculate frameTime with minimum FPS to prevent division by zero
+    const frameTime = 1000 / Math.max(fps, 1);
 
     // Count entities by type
     const playerCount = Object.keys(state.players).length;
     const trailCount = Object.keys(state.trails).length;
     const aiCount = Object.values(state.players).filter(p => p.network.isAi).length;
 
-    // Get memory usage (if available)
+    // Get memory usage (if available) - round to 2 decimal places
     let memoryUsed = 0;
     let memoryTotal = 0;
     if (performance.memory) {
-        memoryUsed = performance.memory.usedJSHeapSize / (1024 * 1024);
-        memoryTotal = performance.memory.jsHeapSizeLimit / (1024 * 1024);
+        memoryUsed = Math.round((performance.memory.usedJSHeapSize / (1024 * 1024)) * 100) / 100;
+        memoryTotal = Math.round((performance.memory.jsHeapSizeLimit / (1024 * 1024)) * 100) / 100;
     } else {
         memoryUsed = 50; // Fallback estimate
         memoryTotal = 512;

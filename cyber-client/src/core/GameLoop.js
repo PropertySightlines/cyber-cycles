@@ -270,8 +270,10 @@ export class GameLoop {
      * @private
      */
     _updateStats(frameTime, physicsUpdates) {
+        // Prevent division by zero - use minimum frameTime of 1ms (max 1000 FPS)
+        const safeFrameTime = Math.max(frameTime, 1);
         this._stats.frameTime = frameTime;
-        this._stats.fps = 1000 / frameTime;
+        this._stats.fps = Math.round((1000 / safeFrameTime) * 100) / 100;
         this._stats.physicsUpdatesPerFrame = physicsUpdates;
         this._stats.totalFrames++;
         this._stats.elapsedTime = this._now() - this._stats.startTime;

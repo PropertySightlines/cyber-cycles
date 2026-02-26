@@ -38,7 +38,7 @@ export const PlayerState = {
  */
 const STATE_TRANSITIONS = new Map([
     [PlayerState.ALIVE, [PlayerState.DEAD, PlayerState.BOOSTING]],
-    [PlayerState.DEAD, [PlayerState.RESPAWNING]],
+    [PlayerState.DEAD, [PlayerState.RESPAWNING, PlayerState.ALIVE]], // Allow direct ALIVE for immediate respawn
     [PlayerState.RESPAWNING, [PlayerState.ALIVE]],
     [PlayerState.BOOSTING, [PlayerState.ALIVE, PlayerState.DEAD]]
 ]);
@@ -135,6 +135,14 @@ export class PhysicsComponent {
             this.directionX = dirX / len;
             this.directionZ = dirZ / len;
         }
+    }
+
+    /**
+     * Get current direction as normalized vector
+     * @returns {{x: number, z: number}}
+     */
+    getDirection() {
+        return { x: this.directionX, z: this.directionZ };
     }
 
     /**

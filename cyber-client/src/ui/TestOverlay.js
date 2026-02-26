@@ -47,6 +47,10 @@ export class TestOverlay {
             this.createDOM();
         }
         this.elements.container.style.display = 'block';
+        // Focus on command input when overlay becomes visible
+        if (this.elements.cmdInput) {
+            this.elements.cmdInput.focus();
+        }
     }
     
     hide() {
@@ -75,7 +79,10 @@ export class TestOverlay {
         this.stats.fps = fps;
         this.stats.frameTime = frameTime;
         if (this.elements.fps) {
-            this.elements.fps.textContent = `FPS: ${fps.toFixed(1)} | Frame: ${frameTime.toFixed(2)}ms`;
+            // Round to 2 decimal places for stable display
+            const fpsRounded = Math.round(fps * 100) / 100;
+            const frameTimeRounded = Math.round(frameTime * 100) / 100;
+            this.elements.fps.textContent = `FPS: ${fpsRounded.toFixed(2)} | Frame: ${frameTimeRounded.toFixed(2)}ms`;
             this.elements.fps.style.color = fps >= 55 ? '#00ff00' : fps >= 30 ? '#ffff00' : '#ff0000';
         }
     }
@@ -174,6 +181,8 @@ export class TestOverlay {
             '  memory         - Show memory usage',
             '  pos            - Show player position'
         ];
+        // Ensure log panel is visible when showing help
+        this.showLog();
         return help.join('\n');
     }
     
