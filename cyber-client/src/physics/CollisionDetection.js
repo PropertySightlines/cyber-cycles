@@ -336,8 +336,9 @@ export function checkTrailCollision(player, segments, deathRadius = 2.0) {
     let closestPoint = null;
 
     for (const seg of segments) {
-        // FIX: Removed self-collision filter - players CAN now collide with their own trails
-        // Previously: if (seg.pid === player.id) continue;
+        // Skip self-collision - players should not collide with their own trails
+        // (only collide with other players' trails)
+        if (seg.pid === player.id) continue;
 
         const result = distanceToSegmentWithClosest(
             player.x, player.z,

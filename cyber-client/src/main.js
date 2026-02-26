@@ -536,6 +536,13 @@ function handleGameState(gs) {
             }
         });
 
+        // Clear all trail entities for new round
+        Object.values(state.trails).forEach(trail => {
+            if (trail) {
+                trail.clear();
+            }
+        });
+
         // Clear spatial hash for new round
         spatialHash.clear();
 
@@ -1081,6 +1088,14 @@ function checkCollisions(allSegments, dt = 0.016) {
         // Increment collision check counter
         debugState.collisionChecks++;
 
+        // Debug logging for collision detection
+        console.log("COLLISION CHECK:", {
+            player: entity.id,
+            alive: entity.state.alive,
+            position: {x: pos.x, z: pos.z},
+            segmentCount: allSegments.length
+        });
+
         // Trail collision using new CollisionDetection module
         const trailCollision = checkTrailCollision(
             { id: entity.id, x: pos.x, z: pos.z, alive: true },
@@ -1090,7 +1105,9 @@ function checkCollisions(allSegments, dt = 0.016) {
 
         if (trailCollision) {
             entity.takeDamage();
-            console.log("Player", entity.id, "hit trail of", trailCollision.segment.pid);
+            console.log("Player", entity.id, "hit trail of", trailCollision.segment.pid, 
+                "at distance", trailCollision.distance, 
+                "closest point:", {x: trailCollision.closestX, z: trailCollision.closestZ});
 
             if (entity.id === myPlayerId) {
                 sendStateSync(entity);
