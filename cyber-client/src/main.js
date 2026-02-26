@@ -163,30 +163,30 @@ const ADMIN_IDENTITY = "c2007484dedccf3d247b44dc4ebafeee388121889dffea0ceedfd63b
  * Initialize the TestOverlay debug UI
  */
 function initTestOverlay() {
-    debugState.overlay = new TestOverlay({ position: 'top-left', visible: true });
+    debugState.overlay = new TestOverlay({ position: 'top-left', visible: false });
 
-    // Register command callbacks for game control
-    debugState.overlay.registerCommandCallback('pause', () => {
+    // Set command callbacks using TestOverlay's event callback properties
+    debugState.overlay.onPause = () => {
         debugState.isPaused = true;
-        debugState.overlay.log('Game paused - press F2 to step, F3 to resume', 'warn');
-    });
+        debugState.overlay.log('Game paused - press ` to toggle overlay, type "resume" to continue', 'warn');
+    };
 
-    debugState.overlay.registerCommandCallback('resume', () => {
+    debugState.overlay.onResume = () => {
         debugState.isPaused = false;
         debugState.isStepping = false;
         debugState.overlay.log('Game resumed', 'success');
-    });
+    };
 
-    debugState.overlay.registerCommandCallback('step', () => {
+    debugState.overlay.onStep = () => {
         if (debugState.isPaused) {
             debugState.isStepping = true;
             debugState.overlay.log('Stepping one frame...', 'info');
         } else {
-            debugState.overlay.log('Pause first (pause command)', 'warn');
+            debugState.overlay.log('Pause first (type "pause" command)', 'warn');
         }
-    });
+    };
 
-    debugState.overlay.registerCommandCallback('reset', () => {
+    debugState.overlay.onReset = () => {
         debugState.overlay.log('Resetting game state...', 'warn');
         // Reset game state
         Object.keys(state.players).forEach(id => {
@@ -197,9 +197,9 @@ function initTestOverlay() {
         debugState.isPaused = false;
         debugState.isStepping = false;
         debugState.overlay.log('Game state reset', 'success');
-    });
+    };
 
-    debugState.overlay.registerCommandCallback('spectate', () => {
+    debugState.overlay.onSpectate = () => {
         debugState.spectateMode = !debugState.spectateMode;
         if (debugState.spectateMode) {
             debugState.overlay.log('Spectate mode enabled - watching AI players', 'info');
@@ -213,26 +213,19 @@ function initTestOverlay() {
             debugState.spectateTarget = null;
             debugState.overlay.log('Spectate mode disabled', 'info');
         }
-        return debugState.spectateMode;
-    });
+    };
 
-    debugState.overlay.registerCommandCallback('ai', (count) => {
+    debugState.overlay.onSetAI = (count) => {
         debugState.aiCount = count;
         debugState.overlay.log(`AI count set to ${count}`, 'success');
-        // In single player mode, spawn AI bots
-        if (debugState.singlePlayerMode && conn && conn.reducers.spawnAI) {
-            for (let i = 0; i < count; i++) {
-                conn.reducers.spawnAI();
-            }
-        }
-    });
+    };
 
-    debugState.overlay.registerCommandCallback('speed', (value) => {
+    debugState.overlay.onSetSpeed = (value) => {
         debugState.gameSpeed = Math.max(0.1, Math.min(5.0, value));
         debugState.overlay.log(`Game speed set to ${debugState.gameSpeed}x`, 'success');
-    });
+    };
 
-    debugState.overlay.log('TestOverlay initialized - Press F1 to toggle', 'success');
+    debugState.overlay.log('Debug overlay ready - Press ` (backtick) to toggle', 'success');
 }
 
 // ============================================================================
@@ -604,8 +597,8 @@ function requestRespawn() {
  */
 function setupInputHandlers() {
     window.addEventListener('keydown', (e) => {
-        // Debug key bindings - F3 toggles overlay (F1 is browser help)
-        if (e.key === 'F3') {
+        // Debug key binding - backtick (`) toggles overlay (no browser conflicts)
+        if (e.key === '`' || e.key === '~') {
             e.preventDefault();
             if (debugState.overlay) {
                 debugState.overlay.toggle();
@@ -614,26 +607,18 @@ function setupInputHandlers() {
             return;
         }
 
+        // Game controls take priority when overlay is hidden
+        if (!debugState.overlay || !debugState.overlay.isVisible()) {
+            // Game control keys are handled elsewhere
+            return;
+        }
+
+        // When overlay is visible, let it handle all input via its text field
+        // Additional debug keys (optional, work even when overlay hidden)
         if (e.key === 'F2') {
             e.preventDefault();
             if (debugState.overlay) {
                 debugState.overlay.executeCommand('step');
-            }
-            return;
-        }
-
-        if (e.key === 'F4') {
-            e.preventDefault();
-            if (debugState.overlay) {
-                debugState.overlay.executeCommand('resume');
-            }
-            return;
-        }
-
-        if (e.key === 'F4') {
-            e.preventDefault();
-            if (debugState.overlay) {
-                debugState.overlay.toggleLog();
             }
             return;
         }
@@ -646,20 +631,7 @@ function setupInputHandlers() {
             return;
         }
 
-        // Toggle spectate mode with F6
         if (e.key === 'F6') {
-            e.preventDefault();
-            if (debugState.overlay) {
-                debugState.overlay.executeCommand('spectate');
-            }
-            return;
-        }
-
-        // Toggle single player mode with F7
-        if (e.key === 'F7') {
-            e.preventDefault();
-            debugState.singlePlayerMode = !debugState.singlePlayerMode;
-            if (debugState.overlay) {
                 debugState.overlay.log(`Single player mode: ${debugState.singlePlayerMode ? 'ON' : 'OFF'}`, 'warn');
             }
             return;
@@ -1739,7 +1711,7 @@ function init() {
     });
 
     console.log("Cyber Cycles - Initialization complete");
-    console.log("Debug Controls: F3=Toggle Overlay, F2=Step, F4=Resume, F5=Reset, F6=Spectate, F7=Single Player");
+    console.log("Debug Controls: `=Toggle Overlay, type 'help' for commands, F2=Step, F5=Reset, F6=Spectate");
 }
 
 // Start the game
