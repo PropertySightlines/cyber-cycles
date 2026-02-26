@@ -259,7 +259,7 @@ function initSpacetimeDB() {
                 if (adminPanel) adminPanel.style.display = 'block';
             }
 
-            updateStatus("Press any arrow key to join the race!");
+            updateStatus("✅ Connected! Press any arrow key to join the race!");
 
             // Subscribe to tables
             conn.subscriptionBuilder()
@@ -281,7 +281,31 @@ function initSpacetimeDB() {
                     "SELECT * FROM game_state"
                 ]);
         })
+        .onConnectError((err) => {
+            console.error("Connection error:", err);
+            updateStatus("❌ Connection failed. Check console (F12) for details.");
+            if (debugState.overlay) {
+                debugState.overlay.log(`Connection error: ${err.message || err}`, 'error');
+            }
+        })
+        .onDisconnect((conn, error) => {
+            console.log("Disconnected:", error);
+            updateStatus("⚠️ Disconnected from server");
+            if (debugState.overlay) {
+                debugState.overlay.log(`Disconnected: ${error?.message || 'Unknown error'}`, 'warn');
+            }
+        })
         .build();
+
+    // Connection timeout message
+    setTimeout(() => {
+        if (!myIdentity) {
+            updateStatus("⏳ Connecting... (this may take a few seconds)");
+            if (debugState.overlay) {
+                debugState.overlay.log('Connection taking longer than expected...', 'warn');
+            }
+        }
+    }, 5000);
 
     // Player insert handler
     conn.db.player.onInsert((ctx, p) => {
@@ -579,8 +603,8 @@ function requestRespawn() {
  */
 function setupInputHandlers() {
     window.addEventListener('keydown', (e) => {
-        // Debug key bindings
-        if (e.key === 'F1') {
+        // Debug key bindings - F3 toggles overlay (F1 is browser help)
+        if (e.key === 'F3') {
             e.preventDefault();
             if (debugState.overlay) {
                 debugState.overlay.toggle();
@@ -597,7 +621,7 @@ function setupInputHandlers() {
             return;
         }
 
-        if (e.key === 'F3') {
+        if (e.key === 'F4') {
             e.preventDefault();
             if (debugState.overlay) {
                 debugState.overlay.executeCommand('resume');
@@ -1714,7 +1738,7 @@ function init() {
     });
 
     console.log("Cyber Cycles - Initialization complete");
-    console.log("Debug Controls: F1=Toggle Overlay, F2=Step, F3=Resume, F4=Toggle Log, F5=Reset, F6=Spectate, F7=Single Player");
+    console.log("Debug Controls: F3=Toggle Overlay, F2=Step, F4=Resume, F5=Reset, F6=Spectate, F7=Single Player");
 }
 
 // Start the game
