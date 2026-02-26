@@ -29,7 +29,7 @@ import { TestOverlay } from './ui/TestOverlay.js';
 // Core modules
 import { SpatialHash } from './core/SpatialHash.js';
 import { EventSystem } from './core/EventSystem.js';
-import { PHYSICS_CONFIG, GAME_CONFIG, COLLISION_CONFIG, RUBBER_CONFIG } from './core/Config.js';
+import { PHYSICS_CONFIG, GAME_CONFIG, COLLISION_CONFIG } from './core/Config.js';
 
 // Physics modules
 import {
@@ -49,7 +49,8 @@ import {
     detectWallProximity,
     calculateWallDistance,
     isNearWall,
-    applyRubberCollision
+    applyRubberCollision,
+    RUBBER_CONFIG
 } from './physics/RubberSystem.js';
 
 // Game entities
