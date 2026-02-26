@@ -22,8 +22,9 @@
  *
  * These values control the core physics behavior of the game.
  * All speeds are in units/second, accelerations in units/second².
+ * Note: Not frozen to allow runtime configuration changes (e.g., tronStyleTurning).
  */
-export const PHYSICS_CONFIG = Object.freeze({
+export const PHYSICS_CONFIG = {
     /** Base movement speed (units/second) */
     baseSpeed: 40.0,
 
@@ -84,8 +85,9 @@ export const PHYSICS_CONFIG = Object.freeze({
  * Game settings and rules
  *
  * Controls game mechanics, arena settings, and player options.
+ * Note: Not frozen to allow runtime configuration changes.
  */
-export const GAME_CONFIG = Object.freeze({
+export const GAME_CONFIG = {
     /** Arena half-size (full size is 400x400) */
     arenaSize: 200,
 
@@ -147,7 +149,10 @@ export const GAME_CONFIG = Object.freeze({
     targetFrameRate: 60,
 
     /** Enable vsync */
-    vsyncEnabled: true
+    vsyncEnabled: true,
+
+    /** How long dead trails persist before disappearing (seconds). 0 = instant disappear */
+    deadTrailPersistence: 0.0
 });
 
 // ============================================================================

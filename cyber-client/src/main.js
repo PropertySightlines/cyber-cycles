@@ -1546,22 +1546,24 @@ function renderGameState() {
             camera.lookAt(pos.x, 1, pos.z);
         }
 
-        // Update visibility - bike hidden when dead, but trail remains as ghost trail
+        // Update visibility - bike hidden when dead
         bikeGroup.visible = entity.state.alive;
-        trail.visible = true; // Always show trail (including ghost trails for dead players)
+        
+        // FIX: Hide trail when player is dead (respecting deadTrailPersistence config)
+        // If deadTrailPersistence is 0, trails disappear instantly when dead
+        // If > 0, trails would persist for that many seconds (requires death timestamp tracking)
+        trail.visible = entity.state.alive;
 
-        // Update trail mesh from TrailEntity (even for dead players - ghost trails)
+        // Update trail mesh from TrailEntity
         const trailEntity = state.trails[entity.id];
-        if (trailEntity) {
+        if (trailEntity && entity.state.alive) {
             updateTrailMesh(trailEntity, trail);
         }
 
-        // Style ghost trails differently (semi-transparent)
-        if (!entity.state.alive) {
-            trail.material.opacity = 0.3; // Ghost trail - more transparent
-            trail.material.depthWrite = false;
-        } else {
+        // Set trail opacity for alive players
+        if (entity.state.alive) {
             trail.material.opacity = 0.7; // Normal trail
+            trail.material.depthWrite = false;
         }
 
         if (!entity.state.alive) return;
