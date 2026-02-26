@@ -632,17 +632,9 @@ function setupInputHandlers() {
         }
 
         if (e.key === 'F6') {
-                debugState.overlay.log(`Single player mode: ${debugState.singlePlayerMode ? 'ON' : 'OFF'}`, 'warn');
-            }
-            return;
-        }
-
-        // Console command input with backtick
-        if (e.key === '`' || e.key === '~') {
             e.preventDefault();
             if (debugState.overlay) {
-                debugState.overlay.showLog();
-                debugState.overlay.showCommandHelp();
+                debugState.overlay.log(`Single player mode: ${debugState.singlePlayerMode ? 'ON' : 'OFF'}`, 'warn');
             }
             return;
         }
